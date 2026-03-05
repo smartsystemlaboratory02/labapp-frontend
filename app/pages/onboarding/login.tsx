@@ -76,9 +76,9 @@ const Login = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="z-10 w-full max-w-md"
+      className="z-10 w-full max-w-xl"
     >
-      <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-[2rem] p-8 md:p-10">
+      <div className="p-4">
         <div className="flex flex-col items-center mb-8">
           <Logo />
           <h1 className="mt-6 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
@@ -131,7 +131,7 @@ const Login = () => {
                       Password
                     </FormLabel>
                     <LinkText
-                      to="/onboarding/forgot-password"
+                      to="/forgot-password"
                       className="text-xs hover:underline"
                     >
                       Forgot password?

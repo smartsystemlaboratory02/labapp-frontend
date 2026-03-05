@@ -76,206 +76,166 @@ const Signup = () => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     console.log("Form Data:", data);
-    // Simulate API call
     setTimeout(() => setIsSubmitting(false), 2000);
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#fafafa] dark:bg-[#050505] p-4 py-12">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="z-10 w-full max-w-2xl"
-      >
-        <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-[2.5rem] p-8 md:p-12">
-          <div className="flex flex-col items-center mb-10">
-            <Logo />
-            <h1 className="mt-6 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Create Personnel
-            </h1>
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2 text-center">
-              Fill in the details below to onboard a new member to the SSRL Lab
-            </p>
-          </div>
+    // <div className="min-h-screen w-full flex items-center justify-center bg-[#fafafa] dark:bg-[#050505] p-4 py-12">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="z-10 w-full max-w-180"
+    >
+      <div className="p-6">
+        <div className="flex flex-col items-center mb-10">
+          <Logo />
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Create Personnel
+          </h1>
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2 text-center">
+            Fill in the details below to onboard a new member to the SSRL Lab
+          </p>
+        </div>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              {/* Profile Image Upload */}
-              <div className="flex flex-col items-center justify-center gap-4 mb-8">
-                <div
-                  className="group relative w-32 h-32 rounded-full bg-zinc-100 dark:bg-zinc-900 border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary transition-all"
-                  onClick={() => fileInputRef.current?.click()}
-                >
-                  {previewImage ? (
-                    <img
-                      src={previewImage}
-                      alt="Preview"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center text-zinc-400 group-hover:text-primary">
-                      <Camera className="w-8 h-8 mb-1" />
-                      <span className="text-[10px] font-bold uppercase">
-                        Add Photo
-                      </span>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                    <Add className="text-white w-8 h-8" />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            {/* Profile Image Upload */}
+            <div className="flex flex-col items-center justify-center gap-4 mb-8">
+              <div
+                className="group relative w-32 h-32 rounded-full bg-zinc-100 dark:bg-zinc-900 border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary transition-all"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {previewImage ? (
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center text-zinc-400 group-hover:text-primary">
+                    <Camera className="w-8 h-8 mb-1" />
+                    <span className="text-[10px] font-bold uppercase">
+                      Add Photo
+                    </span>
                   </div>
+                )}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <Add className="text-white w-8 h-8" />
                 </div>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  onChange={handleFileChange}
-                  accept="image/*"
-                />
               </div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                onChange={handleFileChange}
+                accept="image/*"
+              />
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormField
-                  control={form.control}
-                  name="firstname"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
-                        First Name <Asterisk className="w-3 h-3 text-red-500" />
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="John"
-                          className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="lastname"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
-                        Last Name <Asterisk className="w-3 h-3 text-red-500" />
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Doe"
-                          className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
-                        Email Address{" "}
-                        <Asterisk className="w-3 h-3 text-red-500" />
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="j.doe@ssrl.com"
-                          className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phoneNum"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
-                        Phone Number{" "}
-                        <Asterisk className="w-3 h-3 text-red-500" />
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="08012345678"
-                          className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="stack"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                        Stack
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50">
-                            <SelectValue placeholder="Select stack" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="software">Software</SelectItem>
-                          <SelectItem value="hardware">Hardware</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="niche"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                        Niche
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Frontend, Embedded, etc."
-                          className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="firstname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
+                      First Name <Asterisk className="w-3 h-3 text-red-500" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="John" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}
-                name="bio"
+                name="lastname"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
+                      Last Name <Asterisk className="w-3 h-3 text-red-500" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
+                      Email Address{" "}
+                      <Asterisk className="w-3 h-3 text-red-500" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="j.doe@ssrl.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="phoneNum"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
+                      Phone Number <Asterisk className="w-3 h-3 text-red-500" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="08012345678" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="stack"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                      Short Bio
+                      Stack
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50">
+                          <SelectValue placeholder="Select stack" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent position="popper">
+                        <SelectItem value="software">Software</SelectItem>
+                        <SelectItem value="hardware">Hardware</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="niche"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                      Niche
                     </FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Tell us a bit about the new personnel..."
-                        className="min-h-30 bg-zinc-50/50 dark:bg-zinc-900/50 resize-none"
+                      <Input
+                        placeholder="Frontend, Embedded, etc."
                         {...field}
                       />
                     </FormControl>
@@ -283,23 +243,44 @@ const Signup = () => {
                   </FormItem>
                 )}
               />
+            </div>
 
-              <Button
-                type="submit"
-                className="w-full h-12 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all text-base font-bold"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? (
-                  <RiseLoader color="white" />
-                ) : (
-                  "Create Personnel Account"
-                )}
-              </Button>
-            </form>
-          </Form>
-        </div>
-      </motion.div>
-    </div>
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    Short Bio
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Tell us a bit about the new personnel..."
+                      className="min-h-30 resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="w-full h-12 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all text-base font-bold"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <RiseLoader color="white" />
+              ) : (
+                "Create Personnel Account"
+              )}
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </motion.div>
+    // </div>
   );
 };
 

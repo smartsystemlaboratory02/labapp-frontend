@@ -1,108 +1,115 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import forgotPassword from "../../../assets/ForgotPassword.svg"; // Importing the image
-import Backtosignin from "../../../assets/Backtosignin.svg"; // Importing the image
-import CustomLabel from "../../../components/UI/CustomLabel.jsx";
-import { validateEmail } from "../../../utils/verifyForm.js";
-import { useRequest } from "../../../hooks/useRequest.js";
-import { useUserData } from "../../../context/UserContext.jsx";
-import { useNavigate } from "react-router-dom";
-import Spinner from "../../../components/UI/Spinner.jsx";
-import BigGreenButton from "../../../components/UI/BigGreenButton.jsx";
-import toast from "react-hot-toast";
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useNavigate } from "react-router";
+import { motion } from "framer-motion";
+import { ArrowLeft, Mail } from "lucide-react";
+// import toast from "react-hot-toast";
+
+import { Button } from "~/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import Logo from "~/components/ui/Logo";
+import LinkText from "~/components/ui/LinkText";
+import { useState } from "react";
+// import Spinner from "~/components/UI/Spinner";
+// import { useRequest } from "~/hooks/useRequest";
+// import { useUserData } from "~/context/UserContext";
+import { RiseLoader } from "react-spinners";
+
+// Schema validation
+const formSchema = z.object({
+  email: z.email("Please enter a valid email address"),
+});
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState({ email: "", isError: false, msg: "" });
-  const validateEmailRef = useRef();
-  const [sendForgetRequest, forgotLoading] = useRequest();
-  const [
-    sendCredRequest,
-    credLoading,
-    setCredLoading,
-    credError,
-    setCredError,
-  ] = useRequest();
-  const { userId } = useUserData();
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleForgetPassword = (event) => {
-    event.preventDefault();
-    validateEmail(email, setEmail, validateEmailRef);
+  // const { userId } = useUserData();
+  // const [sendCredRequest, credLoading] = useRequest();
 
-    if (validateEmailRef.current) {
-      confirmCredentials();
-    }
-  };
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { email: "" },
+  });
 
-  const confirmCredentials = async () => {
-    // console.log(userId);
-    const res = await sendCredRequest("auth/forgot_password", "POST", {
-      uid: userId,
-      email: email.email,
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      toast.success(data.message);
-      setTimeout(() => {
-        navigate("/sendOTP");
-      }, 2000);
-    } else {
-      setCredError({ status: true, msg: data.message });
-    }
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setIsSubmitting(true);
+    console.log("Form Data:", data);
+    setTimeout(() => setIsSubmitting(false), 2000);
   };
 
   return (
-    <div className="flex w-full items-center justify-center bg-white md:min-h-screen">
-      {/* forgot password tab */}
-      <div className="m w-full max-w-md space-y-6 p-6">
-        {credError.status && <p>{credError.msg}</p>}
-        <div className="flex items-center justify-center">
-          <img src={forgotPassword} alt="forgot Password" />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="z-10 w-full max-w-xl"
+    >
+      <div className="p-4">
+        <div className="flex flex-col items-center mb-10">
+          <Logo />
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Forgot Password?
+          </h1>
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2 text-center max-w-70">
+            No worries! Enter your email and we'll send you a link to reset your
+            password.
+          </p>
         </div>
 
-        <h2 className="text-center text-3xl font-semibold leading-10 text-[#333333]">
-          Forgot Password
-        </h2>
-        <p className="py-1 text-center text-sm font-medium text-[#666666] opacity-75">
-          Enter your Email and we&apos;ll send you a link to reset your password
-        </p>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                    Email Address
+                  </FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+                      <Input placeholder="name@company.com" {...field} />
+                    </div>
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
 
-        <form className="space-y-8" onSubmit={handleForgetPassword} noValidate>
-          <CustomLabel
-            htmlFor="email"
-            labelText="Email:"
-            inputType="email"
-            inputValue={email.email}
-            onChange={(event) =>
-              setEmail({ ...email, email: event.target.value })
-            }
-            onBlur={() => validateEmail(email, setEmail, validateEmailRef)}
-            isError={email.isError}
-            errorMessage={email.msg}
-            placeholder="Enter email address"
-          >
-            Email Address
-          </CustomLabel>
+            <Button
+              type="submit"
+              className="w-full h-12 mt-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all font-bold text-base rounded-xl"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? <RiseLoader color="white" /> : "Send Reset Link"}
+            </Button>
+          </form>
+        </Form>
 
-          <div className="mt-2 flex items-center justify-end gap-4">
-            {credLoading && <Spinner />}
-            <BigGreenButton type="submit">Submit</BigGreenButton>
-          </div>
-        </form>
-
-        <div className="mt-2 flex items-center justify-center gap-3 text-center text-base font-medium">
-          <img src={Backtosignin} alt="BacK" />
-
-          <Link
+        <div className="mt-8 flex justify-center">
+          <LinkText
             to="/"
-            className="text-base font-medium text-[#666666] opacity-75"
+            className="flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors group"
           >
-            Back to Sign in{" "}
-          </Link>
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            Back to Sign in
+          </LinkText>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

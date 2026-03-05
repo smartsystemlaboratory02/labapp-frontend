@@ -11,7 +11,7 @@ const OnboardingLayout = () => {
         <div className="absolute top-0 left-0 h-full w-full bg-black/40" />
       </div>
 
-      <div className="relative w-full flex items-center justify-center bg-[#fafafa] dark:bg-[#050505] p-4 overflow-hidden flex-1">
+      <div className="relative w-full flex items-center justify-center bg-[#fafafa] dark:bg-[#050505] p-4 overflow-y-scroll flex-1">
         <Outlet />
       </div>
     </div>

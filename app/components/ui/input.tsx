@@ -3,6 +3,8 @@ import * as React from "react";
 import { cn } from "~/lib/utils";
 import { Eye, EyeSlash } from "iconsax-reactjs";
 
+// TODO: autofill looks terrible
+
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   const [show, setShow] = React.useState<boolean>(false);
 
@@ -22,13 +24,13 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       {type === "password" &&
         (show ? (
           <Eye
-            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer size-3"
             onClick={() => setShow(!show)}
             variant="TwoTone"
           />
         ) : (
           <EyeSlash
-            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer size-3"
             onClick={() => setShow(!show)}
             variant="TwoTone"
           />
