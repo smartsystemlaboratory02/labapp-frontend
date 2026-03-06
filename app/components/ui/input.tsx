@@ -24,13 +24,13 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
       {type === "password" &&
         (show ? (
           <Eye
-            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer size-3"
+            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer size-4"
             onClick={() => setShow(!show)}
             variant="TwoTone"
           />
         ) : (
           <EyeSlash
-            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer size-3"
+            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer size-4"
             onClick={() => setShow(!show)}
             variant="TwoTone"
           />

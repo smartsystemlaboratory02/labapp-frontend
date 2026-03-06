@@ -265,11 +265,7 @@ const Signup = () => {
               )}
             />
 
-            <Button
-              type="submit"
-              className="w-full h-12 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all text-base font-bold"
-              disabled={isSubmitting}
-            >
+            <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <RiseLoader color="white" />
               ) : (

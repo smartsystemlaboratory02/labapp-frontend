@@ -62,7 +62,7 @@ const ForgotPassword = () => {
           <h1 className="mt-6 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
             Forgot Password?
           </h1>
-          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2 text-center max-w-70">
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2 text-center max-w-120">
             No worries! Enter your email and we'll send you a link to reset your
             password.
           </p>
@@ -79,22 +79,15 @@ const ForgotPassword = () => {
                     Email Address
                   </FormLabel>
                   <FormControl>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-                      <Input placeholder="name@company.com" {...field} />
-                    </div>
+                    <Input placeholder="name@company.com" {...field} />
                   </FormControl>
                   <FormMessage className="text-xs" />
                 </FormItem>
               )}
             />
 
-            <Button
-              type="submit"
-              className="w-full h-12 mt-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all font-bold text-base rounded-xl"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? <RiseLoader color="white" /> : "Send Reset Link"}
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? <RiseLoader color="white" /> : "Send OTP"}
             </Button>
           </form>
         </Form>

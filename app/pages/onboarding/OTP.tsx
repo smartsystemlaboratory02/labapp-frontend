@@ -1,122 +1,138 @@
-import React, { useEffect, useRef, useState } from "react";
-import InputError from "../../../components/UI/InputError";
-import { validateOTP } from "../../../utils/verifyForm";
-import { useRequest } from "../../../hooks/useRequest";
-import toast from "react-hot-toast";
-import { useUserData } from "../../../context/UserContext";
-import { useNavigate } from "react-router-dom";
-import Spinner from "../../../components/UI/Spinner";
-import BigGreenButton from "../../../components/UI/BigGreenButton";
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useNavigate } from "react-router";
+import { motion } from "framer-motion";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
+
+import { Button } from "~/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "~/components/ui/form";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "~/components/ui/input-otp";
+import Logo from "~/components/ui/Logo";
+import LinkText from "~/components/ui/LinkText";
+import { RiseLoader } from "react-spinners";
+import { useState } from "react";
+import { ArrowLeft, ShieldTick } from "iconsax-reactjs";
+
+const FormSchema = z.object({
+  code: z.string().min(6, "Please enter the full 6-digit code."),
+});
 
 const OTPPage = () => {
-  const [otp, setOtp] = useState({
-    otp: new Array(6).fill(""),
-    isError: false,
-    error: "",
+  const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: { code: "" },
   });
 
-  const otpRef = useRef(false);
-  const { userId } = useUserData();
-  const navigate = useNavigate();
-  const [sendOTPRequest, otpLoading, setOtpLoading, otpError, setOtpError] =
-    useRequest();
-
-  const handleChange = (element, index) => {
-    if (isNaN(element.value)) return false;
-
-    setOtp({
-      ...otp,
-      otp: otp.otp.map((d, id) => (id === index ? element.value : d)),
-    });
-
-    if (element.nextSibling) {
-      element.nextSibling.focus();
-    }
-  };
-
-  const handleBackkey = (element, index) => {
-    if (element.key === "Backspace" && otp.otp[index] === "") {
-      if (element.target.previousSibling) {
-        element.preventDefault();
-        element.target.previousSibling.focus();
-        setOtp({
-          ...otp,
-          otp: otp.otp.map((d, id) => (id === index - 1 ? "" : d)),
-        });
-      }
-    }
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    validateOTP(otp, setOtp, otpRef);
-
-    if (!otpRef.current) {
-      toast.error("Invalid OTP");
-      return;
-    }
-
-    const strOtp = otp.otp.join("");
-
-    console.log(strOtp);
-    const res = await sendOTPRequest("auth/confirm_otp", "POST", {
-      otp: strOtp,
-      uid: userId,
-    });
-
-    const data = await res.json();
-    if (res.ok) {
-      toast.success(data.message);
-      setTimeout(() => {
-        navigate("/resetPassword");
-      }, 2000);
-      // Go to reset password page
-    } else {
-      setOtpError({ status: true, msg: data.message });
-    }
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+    setIsSubmitting(true);
+    console.log("Form Data:", data);
+    setTimeout(() => setIsSubmitting(false), 2000);
   };
 
   return (
-    <div className="flex w-full items-center justify-center bg-white md:min-h-screen">
-      <div className="w-full max-w-md space-y-5 p-6">
-        {otpError.status && <p>{otpError.msg}</p>}
-        <h2 className="text-center text-3xl font-semibold leading-10 text-[#333333]">
-          Enter OTP
-        </h2>
-        <p className="py-1 text-center text-sm font-medium text-[#666666] opacity-75">
-          Enter the OTP sent to your email address
-        </p>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="z-10 w-full max-w-xl"
+    >
+      <div className="p-4">
+        <div className="flex flex-col items-center mb-10">
+          <Logo />
+          <h1 className="mt-6 text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Verify OTP
+          </h1>
+          <p className="text-zinc-500 dark:text-zinc-400 text-sm mt-2 text-center max-w-75">
+            Enter the 6-digit code we sent to your email address to continue.
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="text-center">
-          <div className="flex justify-center space-x-2 text-base font-normal opacity-80">
-            {otp.otp.map((data, index) => {
-              return (
-                <input
-                  type="text"
-                  key={index}
-                  value={data}
-                  maxLength="1"
-                  className="h-10 w-10 rounded-lg border border-[#666666] text-center text-[#111111] focus:text-black focus:outline-none"
-                  onChange={(e) => {
-                    handleChange(e.target, index);
-                  }}
-                  onFocus={(e) => {
-                    e.target.select();
-                  }}
-                  onKeyDown={(e) => handleBackkey(e, index)}
-                />
-              );
-            })}
-          </div>
-          {otp.isError && <InputError>{otp.error}</InputError>}
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-8 flex flex-col items-center"
+          >
+            <FormField
+              control={form.control}
+              name="code"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <InputOTP
+                      maxLength={6}
+                      pattern={REGEXP_ONLY_DIGITS}
+                      {...field}
+                    >
+                      <InputOTPGroup className="gap-2 md:gap-3">
+                        {[0, 1, 2, 3, 4, 5].map((index) => (
+                          <InputOTPSlot
+                            key={index}
+                            index={index}
+                            className="w-12 h-14 md:w-14 md:h-16 text-xl font-bold rounded-xl border-2 transition-all"
+                          />
+                        ))}
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </FormControl>
+                  <FormMessage className="text-center text-xs" />
+                </FormItem>
+              )}
+            />
 
-          <div className="mt-6 flex items-center justify-end text-center gap-4">
-            {otpLoading && <Spinner />}
-            <BigGreenButton type="submit">Verify OTP</BigGreenButton>
-          </div>
-        </form>
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? (
+                <RiseLoader className="text-white" />
+              ) : (
+                <>
+                  <ShieldTick className="w-5 h-5" />
+                  Verify Code
+                </>
+              )}
+            </Button>
+          </form>
+        </Form>
+
+        <div className="mt-10 flex flex-col items-center gap-6">
+          <p className="text-sm text-zinc-500">
+            Didn't receive the code?{" "}
+            <button
+              type="button"
+              className="font-semibold text-primary hover:underline transition-all"
+            >
+              Resend OTP
+            </button>{" "}
+          </p>
+
+          <LinkText
+            to="/forgot-password"
+            className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors group"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            Back to email entry
+          </LinkText>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

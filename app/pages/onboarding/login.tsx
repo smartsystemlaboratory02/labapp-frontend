@@ -152,7 +152,6 @@ const Login = () => {
 
             <Button
               type="submit"
-              className="w-full h-11 mt-2 shadow-lg shadow-primary/20 hover:shadow-primary/30 active:scale-[0.98] transition-all"
               // disabled={isPending}
             >
               {/* {isPending ? (
