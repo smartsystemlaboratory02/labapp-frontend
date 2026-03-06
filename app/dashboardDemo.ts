@@ -1,3 +1,12 @@
+import {
+  Add,
+  FolderCloud,
+  TickCircle,
+  Timer1,
+  ArrowRight,
+  More,
+} from "iconsax-reactjs";
+
 export const DEMO_DATA = {
   name: "John",
   projects: [
@@ -124,3 +133,138 @@ export const DEMO_DATA = {
     { _id: "t6", task: "Backup project repository", completed: false },
   ],
 };
+
+export const MOCK_STATS = [
+  {
+    label: "Total Projects",
+    count: 12,
+    icon: FolderCloud,
+    color: "text-blue-500",
+    bg: "bg-blue-50",
+  },
+  {
+    label: "In Progress",
+    count: 8,
+    icon: Timer1,
+    color: "text-amber-500",
+    bg: "bg-amber-50",
+  },
+  {
+    label: "Completed",
+    count: 4,
+    icon: TickCircle,
+    color: "text-emerald-500",
+    bg: "bg-emerald-50",
+  },
+];
+
+export const MOCK_PROJECTS = [
+  {
+    _id: "p1",
+    name: "SSRL Solar Grid",
+    deadline: "2024-12-20",
+    status: "In Progress",
+    description:
+      "Optimization of power distribution in Sector 7 using neural modeling.",
+    team: [
+      { id: "JD", color: "#FFDEDE" },
+      { id: "AS", color: "#DEFFDF" },
+      { id: "MK", color: "#DEEFFF" },
+      { id: "+4", color: "#F3F4F6" },
+    ],
+  },
+  {
+    _id: "p2",
+    name: "Lab Inventory System",
+    deadline: "2024-11-15",
+    status: "Completed",
+    description: "Automated tracking for chemical reagents and equipment logs.",
+    team: [
+      { id: "BT", color: "#F0DEFF" },
+      { id: "KL", color: "#FFFEDE" },
+    ],
+  },
+  {
+    _id: "p3",
+    name: "Mobile Diagnostics",
+    deadline: "2025-01-05",
+    status: "In Progress",
+    description: "React Native field app for remote equipment telemetry.",
+    team: [
+      { id: "OP", color: "#E0F2FE" },
+      { id: "WE", color: "#FEE2E2" },
+      { id: "YU", color: "#F0FDF4" },
+    ],
+  },
+  {
+    _id: "p4",
+    name: "Security Audit 2.0",
+    deadline: "2024-10-30",
+    status: "Completed",
+    description:
+      "Full security overhaul of the laboratory biometric access points.",
+    team: [
+      { id: "RS", color: "#FEF3C7" },
+      { id: "TY", color: "#E0E7FF" },
+    ],
+  },
+];
+
+export const MOCK_MEMBERS = [
+  {
+    id: "1",
+    name: "Alex Rivera",
+    role: "Frontend Developer",
+    initial: "AR",
+    color: "bg-blue-100 text-blue-600",
+  },
+  {
+    id: "2",
+    name: "Sarah Chen",
+    role: "UI Designer",
+    initial: "SC",
+    color: "bg-emerald-100 text-emerald-600",
+  },
+  {
+    id: "3",
+    name: "Marcus Johnson",
+    role: "Backend Lead",
+    initial: "MJ",
+    color: "bg-amber-100 text-amber-600",
+  },
+  {
+    id: "4",
+    name: "Lena Volkov",
+    role: "DevOps Engineer",
+    initial: "LV",
+    color: "bg-purple-100 text-purple-600",
+  },
+  {
+    id: "1",
+    name: "Alex Rivera",
+    role: "Frontend Developer",
+    initial: "AR",
+    color: "bg-blue-100 text-blue-600",
+  },
+  {
+    id: "2",
+    name: "Sarah Chen",
+    role: "UI Designer",
+    initial: "SC",
+    color: "bg-emerald-100 text-emerald-600",
+  },
+  {
+    id: "3",
+    name: "Marcus Johnson",
+    role: "Backend Lead",
+    initial: "MJ",
+    color: "bg-amber-100 text-amber-600",
+  },
+  {
+    id: "4",
+    name: "Lena Volkov",
+    role: "DevOps Engineer",
+    initial: "LV",
+    color: "bg-purple-100 text-purple-600",
+  },
+];

@@ -1,0 +1,202 @@
+"use client";
+
+import React from "react";
+import {
+  ArrowLeft2,
+  DocumentCloud,
+  Link1,
+  UserTick,
+  Calendar,
+  Direct,
+  Flag,
+  MessageText,
+  DocumentText,
+  Add,
+  ArrowRight,
+  Setting2,
+} from "iconsax-reactjs";
+
+import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import PageHeader from "~/components/ui/PageHeader";
+import { useNavigate } from "react-router";
+import { motion } from "framer-motion";
+import SectionHeader from "~/components/ui/SectionHeader";
+import ProjectObj from "./components/ProjectObj";
+import ResourceLink from "./components/ResourceLink";
+import { TeamLead, TeamMember } from "./components/ProjectPersonnel";
+
+const PROJECT_MOCK = {
+  id: "LAB-PRJ-2026-X4",
+  name: "Neural Mapping Protocol",
+  status: "active",
+  description:
+    "A comprehensive initiative focused on mapping synaptic responses to low-latency external stimuli. This phase involves hardware-software synchronization and initial safety protocols within the controlled lab environment. A comprehensive initiative focused on mapping synaptic responses to low-latency external stimuli. This phase involves hardware-software synchronization and initial safety protocols within the controlled lab environment.A comprehensive initiative focused on mapping synaptic responses to low-latency external stimuli. This phase involves hardware-software synchronization and initial safety protocols within the controlled lab environment.",
+  createdBy: "Admin. Arinze",
+  createdAt: "Feb 12, 2026",
+  deadline: "Oct 24, 2026",
+  objectives: [
+    "Initial Synaptic Calibration and Baseline Setup",
+    "Latency Stress Testing via External Stimuli",
+    "Safety Protocol Documentation and Compliance Review",
+    "Hardware-Software Synchronization Check",
+    "Initial Synaptic Calibration and Baseline Setup",
+    "Latency Stress Testing via External Stimuli",
+    "Safety Protocol Documentation and Compliance Review",
+    "Hardware-Software Synchronization Check",
+    "Initial Synaptic Calibration and Baseline Setup",
+    "Latency Stress Testing via External Stimuli",
+    "Safety Protocol Documentation and Compliance Review",
+    "Hardware-Software Synchronization Check",
+  ],
+  leads: [{ name: "Dr. Sarah Chen" }, { name: "Ibrahim Sule" }],
+  team: [
+    { name: "Samuel Okon" },
+    { name: "Elena Rodriguez" },
+    { name: "James Watt" },
+  ],
+  submissions: {
+    docs: [
+      { filename: "safety_protocols_v1.pdf" },
+      { filename: "hardware_specs_rev4.docx" },
+    ],
+    links: [
+      { title: "Lab Monitor Dashboard", url: "#" },
+      { title: "Version Control Repository", url: "#" },
+    ],
+  },
+};
+
+export default function ProjectDetailsUI() {
+  const navigate = useNavigate();
+  return (
+    <div className="p-6 lg:p-10 mx-auto space-y-10 selection:bg-primary/10">
+      <div className="flex items-center gap-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => navigate(-1)}
+          className="rounded-2xl hover:bg-zinc-100 items-center justify-center flex ml-0 mt-0 border"
+        >
+          <ArrowLeft2 size="32" />
+        </Button>
+
+        <div className="flex flex-col gap-2">
+          <PageHeader title={PROJECT_MOCK.name} />
+          <motion.span
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center gap-4 text-xs font-bold text-zinc-500 uppercase tracking-[0.15em]"
+          >
+            <Calendar size="12" variant="Bold" /> Due: {PROJECT_MOCK.deadline}
+          </motion.span>
+        </div>
+      </div>
+
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-100 pb-4">
+        <Badge className="bg-primary text-white rounded-md px-3 py-1 text-[9px] font-black uppercase tracking-widest border-none">
+          {PROJECT_MOCK.status}
+        </Badge>
+
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="flex items-center">
+            <MessageText size="18" className="mr-2" /> Feedback
+          </Button>
+          <Button className="flex items-center">
+            <Setting2 size="18" className="mr-2" /> Settings
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-12 gap-12">
+        <div className="col-span-12 lg:col-span-8 space-y-12">
+          <section className="space-y-2">
+            <SectionHeader
+              icon={<DocumentText size="18" variant="Bold" />}
+              label="Project Description"
+            />
+            <div className="bg-zinc-50/50 border border-zinc-100 p-4 rounded-[2.5rem]">
+              <p className="text-zinc-600 leading-relaxed font-medium">
+                {PROJECT_MOCK.description}
+              </p>
+              <div className="grid grid-cols-2 gap-8 mt-10 pt-8 border-t border-zinc-200/50">
+                <MetaItem label="Created By" value={PROJECT_MOCK.createdBy} />
+                <MetaItem label="Created At" value={PROJECT_MOCK.createdAt} />
+              </div>
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <SectionHeader
+              icon={<Direct size="18" variant="Bold" />}
+              label="Project Objectives"
+            />
+            <div className="grid gap-3">
+              {PROJECT_MOCK.objectives.map((obj, i) => (
+                <ProjectObj index={i} key={i} objective={obj} />
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <div className="col-span-12 lg:col-span-4 space-y-10">
+          <section className="space-y-5">
+            <SectionHeader
+              icon={<UserTick size="18" variant="Bold" />}
+              label="Team Members"
+            />
+            <div className="space-y-2">
+              {PROJECT_MOCK.leads.map((lead, i) => (
+                <TeamLead key={i} lead={lead} />
+              ))}
+              {PROJECT_MOCK.team.map((member, i) => (
+                <TeamMember key={i} member={member} />
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-5">
+            <div className="flex items-center justify-between">
+              <SectionHeader
+                icon={<DocumentCloud size="18" variant="Bold" />}
+                label="Projecct Resources"
+              />
+              <button className="p-1 text-secondary hover:scale-110 transition-transform">
+                <Add size="32" variant="Bold" />
+              </button>
+            </div>
+
+            <div className="grid gap-2">
+              {PROJECT_MOCK.submissions.docs.map((doc, i) => (
+                <ResourceLink
+                  key={i}
+                  title={doc.filename}
+                  icon={<DocumentText size="18" />}
+                  type="doc"
+                />
+              ))}
+              {PROJECT_MOCK.submissions.links.map((link, i) => (
+                <ResourceLink
+                  key={i}
+                  title={link.title}
+                  icon={<Link1 size="18" />}
+                  type="link"
+                />
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const MetaItem = ({ label, value }: { label: string; value: string }) => (
+  <div className="space-y-1">
+    <p className="text-[9px] font-black uppercase text-zinc-400 tracking-widest">
+      {label}
+    </p>
+    <p className="font-bold text-zinc-800 text-sm">{value}</p>
+  </div>
+);
