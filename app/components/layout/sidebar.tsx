@@ -1,18 +1,17 @@
 import * as React from "react";
 import { NavLink, Link, useLocation } from "react-router";
 import {
-  LayoutDashboard,
-  UsersRound,
-  FolderOpenDot,
-  UserRoundCheck,
-  ClipboardList,
-  HandHelping,
-  LayoutList,
-  MessageCircleDashed,
-  Settings,
-  LogOut,
-} from "lucide-react";
-import { motion } from "framer-motion";
+  Category,
+  People,
+  FolderOpen,
+  UserTick,
+  ClipboardText,
+  PresentionChart,
+  Task,
+  Messages1,
+  Setting2,
+  Logout,
+} from "iconsax-reactjs";
 
 import {
   Sidebar,
@@ -24,18 +23,19 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "~/components/ui/sidebar";
+import HorizontalLogo from "../ui/HorizontalLogo";
 import { cn } from "~/lib/utils";
 
 const navData = [
-  { title: "Dashboard", url: "/home/dashboard", icon: LayoutDashboard },
-  { title: "Personnel", url: "/home/personnel", icon: UsersRound },
-  { title: "Projects", url: "/home/projects", icon: FolderOpenDot },
-  { title: "Reports", url: "/home/reports", icon: ClipboardList },
-  { title: "Requests", url: "/home/requests", icon: HandHelping },
-  { title: "Attendance", url: "/home/attendance", icon: UserRoundCheck },
-  { title: "To-do", url: "/home/to-do", icon: LayoutList },
-  { title: "Team Chat", url: "/home/teamchat", icon: MessageCircleDashed },
-  { title: "Settings", url: "/home/settings", icon: Settings },
+  { title: "Dashboard", url: "/dashboard", icon: Category },
+  { title: "Personnel", url: "/personnel", icon: People },
+  { title: "Projects", url: "/projects", icon: FolderOpen },
+  { title: "Reports", url: "/reports", icon: ClipboardText },
+  { title: "Requests", url: "/requests", icon: PresentionChart },
+  { title: "Attendance", url: "/attendance", icon: UserTick },
+  { title: "To-do", url: "/to-do", icon: Task },
+  { title: "Team Chat", url: "/teamchat", icon: Messages1 },
+  { title: "Settings", url: "/settings", icon: Setting2 },
 ];
 
 export default function AppSidebar({
@@ -47,32 +47,18 @@ export default function AppSidebar({
     <Sidebar
       variant="sidebar"
       collapsible="icon"
-      className="bg-primary"
+      className="bg-primary border-none"
       {...props}
     >
       <SidebarHeader className="pt-8 px-6">
-        <Link
-          to="/home/dashboard"
-          className="flex items-center gap-3 text-secondary ml-4"
-        >
-          <img
-            src="/ssrl-logo.png"
-            alt="SSRL Logo"
-            className="p-2 bg-white rounded-md size-12"
-          />
-          <div className="flex flex-col gap-0.5 leading-none">
-            <span className="font-bold text-xl tracking-tight">SSRL</span>
-            <span className="text-[10px] uppercase font-bold tracking-widest">
-              Lab App
-            </span>
-          </div>
-        </Link>
+        <HorizontalLogo />
       </SidebarHeader>
 
-      <SidebarContent className="mt-10 px-4">
-        <SidebarMenu className="gap-2">
+      <SidebarContent className="mt-10 px-4 pr-0">
+        <SidebarMenu className="gap-4">
           {navData.map((item) => {
-            const isActive = location.pathname === item.url;
+            const isActive = location.pathname.startsWith(item.url);
+            const Icon = item.icon;
             return (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
@@ -80,38 +66,38 @@ export default function AppSidebar({
                   isActive={isActive}
                   tooltip={item.title}
                   className={cn(
-                    "group h-12 transition-all duration-300 rounded-xl px-4",
-                    isActive
-                      ? "bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-950 shadow-xl shadow-zinc-200/50 dark:shadow-none"
-                      : "hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-500 dark:text-zinc-400",
+                    "group h-16 transition-all duration-300 rounded-l-full px-0",
+                    isActive ? "bg-white hover:bg-white" : "hover:bg-white/10",
                   )}
                 >
-                  <NavLink to={item.url} className="flex items-center w-full">
-                    <item.icon
+                  <NavLink
+                    to={item.url}
+                    className={cn(
+                      "flex items-center gap-3 w-full h-full pl-4 transition-all duration-300",
+                      isActive ? "activeText" : "",
+                    )}
+                  >
+                    <Icon
+                      size="20"
+                      variant={isActive ? "Bold" : "Linear"}
                       className={cn(
-                        "size-5 shrink-0 transition-transform duration-300 group-hover:scale-110",
-                        isActive ? "text-current" : "text-zinc-400",
+                        "shrink-0 transition-all duration-300",
+                        isActive
+                          ? "text-primary scale-110"
+                          : "text-zinc-100/70 group-hover:text-white group-hover:scale-110",
                       )}
                     />
+
                     <span
                       className={cn(
-                        "font-semibold ml-3 text-sm tracking-tight",
-                        isActive ? "opacity-100" : "opacity-80",
+                        "text-sm tracking-tight transition-all duration-300",
+                        isActive
+                          ? "font-bold text-primary"
+                          : "font-medium text-zinc-100/80 group-hover:text-white",
                       )}
                     >
                       {item.title}
                     </span>
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-indicator"
-                        className="ml-auto size-1.5 rounded-full bg-current"
-                        transition={{
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 30,
-                        }}
-                      />
-                    )}
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -125,10 +111,14 @@ export default function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="h-12 rounded-xl text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 transition-all duration-300 group"
+              className="h-12 rounded-xl text-zinc-100/70 hover:text-red-400 hover:bg-white/10 transition-all duration-300 group"
             >
               <Link to="/">
-                <LogOut className="size-5 shrink-0 transition-transform group-hover:-translate-x-1" />
+                <Logout
+                  size="20"
+                  variant="Linear"
+                  className="shrink-0 transition-transform group-hover:-translate-x-1"
+                />
                 <span className="font-bold ml-3 text-sm">Log Out</span>
               </Link>
             </SidebarMenuButton>

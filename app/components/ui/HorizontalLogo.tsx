@@ -13,7 +13,7 @@ const HorizontalLogo = () => {
       />
       <div className="flex flex-col gap-0.5 leading-none">
         <span className="font-bold text-xl tracking-tight">SSRL</span>
-        <span className="text-[10px] uppercase font-bold tracking-widest">
+        <span className="text-sm uppercase font-bold tracking-widest">
           Lab App
         </span>
       </div>

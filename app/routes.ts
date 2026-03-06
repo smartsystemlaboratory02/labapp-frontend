@@ -14,7 +14,7 @@ export default [
     route("reset-password", "./pages/onboarding/resetPassword.tsx"),
   ]),
 
-  route("home", "./layouts/main.tsx", [
-    index("./pages/dashboard/dashboard.tsx"),
+  layout("./layouts/main.tsx", [
+    route("dashboard", "./pages/dashboard/dashboard.tsx"),
   ]),
 ] satisfies RouteConfig;
