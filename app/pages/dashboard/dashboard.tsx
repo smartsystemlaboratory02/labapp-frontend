@@ -34,7 +34,7 @@ const Dashboard = () => {
             <DashboardCard
               title="Active Projects"
               icon={Briefcase}
-              href="/home/projects"
+              href="/projects"
             >
               <div className="space-y-1">
                 {DEMO_DATA.projects.map((project) => (

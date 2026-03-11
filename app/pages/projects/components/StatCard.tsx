@@ -6,8 +6,8 @@ import { itemVariants } from "~/motionVariants";
 
 const StatCard = ({ stat }: { stat: (typeof MOCK_STATS)[0] }) => (
   <motion.div variants={itemVariants}>
-    <Card className="border-none shadow-sm bg-white rounded-3xl overflow-hidden hover:shadow-md transition-shadow py-2">
-      <CardContent className="p-4 flex items-center gap-4">
+    <Card className="border-none shadow-sm bg-white rounded-3xl overflow-hidden hover:shadow-md transition-shadow py-2 h-full">
+      <CardContent className="p-4 flex items-center gap-4 h-full">
         <div className={cn("p-2 rounded-2xl", stat.bg)}>
           <stat.icon size="24" className={stat.color} variant="Bold" />
         </div>

@@ -6,7 +6,7 @@ export const TeamLead = ({ lead }: { lead: { name: string } }) => {
       <span className="text-xs font-black text-zinc-900 uppercase tracking-wider">
         {lead.name}
       </span>
-      <span className="text-[8px] font-black px-2 py-0.5 bg-white/20 rounded uppercase text-zinc-900">
+      <span className="text-[8px] font-black px-2 py-0.5 bg-white/80 rounded uppercase text-zinc-900">
         Lead
       </span>
     </div>

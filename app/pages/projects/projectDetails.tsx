@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   ArrowLeft2,
   DocumentCloud,
@@ -8,15 +7,12 @@ import {
   UserTick,
   Calendar,
   Direct,
-  Flag,
   MessageText,
   DocumentText,
   Add,
-  ArrowRight,
   Setting2,
 } from "iconsax-reactjs";
 
-import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import PageHeader from "~/components/ui/PageHeader";
@@ -26,6 +22,9 @@ import SectionHeader from "~/components/ui/SectionHeader";
 import ProjectObj from "./components/ProjectObj";
 import ResourceLink from "./components/ResourceLink";
 import { TeamLead, TeamMember } from "./components/ProjectPersonnel";
+import { containerVariants, itemVariants } from "~/motionVariants";
+import { ArrowLeft, ChevronLeft } from "lucide-react";
+import BackButton from "~/components/ui/BackButton";
 
 const PROJECT_MOCK = {
   id: "LAB-PRJ-2026-X4",
@@ -43,12 +42,6 @@ const PROJECT_MOCK = {
     "Hardware-Software Synchronization Check",
     "Initial Synaptic Calibration and Baseline Setup",
     "Latency Stress Testing via External Stimuli",
-    "Safety Protocol Documentation and Compliance Review",
-    "Hardware-Software Synchronization Check",
-    "Initial Synaptic Calibration and Baseline Setup",
-    "Latency Stress Testing via External Stimuli",
-    "Safety Protocol Documentation and Compliance Review",
-    "Hardware-Software Synchronization Check",
   ],
   leads: [{ name: "Dr. Sarah Chen" }, { name: "Ibrahim Sule" }],
   team: [
@@ -71,16 +64,9 @@ const PROJECT_MOCK = {
 export default function ProjectDetailsUI() {
   const navigate = useNavigate();
   return (
-    <div className="p-6 lg:p-10 mx-auto space-y-10 selection:bg-primary/10">
+    <div className="p-6 lg:p-10 mx-auto space-y-10 selection:bg-primary/10 max-w-400">
       <div className="flex items-center gap-6">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(-1)}
-          className="rounded-2xl hover:bg-zinc-100 items-center justify-center flex ml-0 mt-0 border"
-        >
-          <ArrowLeft2 size="32" />
-        </Button>
+        <BackButton />
 
         <div className="flex flex-col gap-2">
           <PageHeader title={PROJECT_MOCK.name} />
@@ -94,24 +80,37 @@ export default function ProjectDetailsUI() {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-100 pb-4">
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-100 pb-4"
+      >
         <Badge className="bg-primary text-white rounded-md px-3 py-1 text-[9px] font-black uppercase tracking-widest border-none">
           {PROJECT_MOCK.status}
         </Badge>
 
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="flex items-center">
+          <Button
+            variant="outline"
+            className="flex items-center"
+            onClick={() => navigate("/projects/feedback")}
+          >
             <MessageText size="18" className="mr-2" /> Feedback
           </Button>
           <Button className="flex items-center">
             <Setting2 size="18" className="mr-2" /> Settings
           </Button>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-12 gap-12">
+      <motion.div
+        className="grid grid-cols-12 gap-12"
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+      >
         <div className="col-span-12 lg:col-span-8 space-y-12">
-          <section className="space-y-2">
+          <motion.section className="space-y-2" variants={itemVariants}>
             <SectionHeader
               icon={<DocumentText size="18" variant="Bold" />}
               label="Project Description"
@@ -125,9 +124,9 @@ export default function ProjectDetailsUI() {
                 <MetaItem label="Created At" value={PROJECT_MOCK.createdAt} />
               </div>
             </div>
-          </section>
+          </motion.section>
 
-          <section className="space-y-4">
+          <motion.section className="space-y-4" variants={itemVariants}>
             <SectionHeader
               icon={<Direct size="18" variant="Bold" />}
               label="Project Objectives"
@@ -137,11 +136,11 @@ export default function ProjectDetailsUI() {
                 <ProjectObj index={i} key={i} objective={obj} />
               ))}
             </div>
-          </section>
+          </motion.section>
         </div>
 
-        <div className="col-span-12 lg:col-span-4 space-y-10">
-          <section className="space-y-5">
+        <motion.div className="col-span-12 lg:col-span-4 space-y-10">
+          <motion.section className="space-y-5" variants={itemVariants}>
             <SectionHeader
               icon={<UserTick size="18" variant="Bold" />}
               label="Team Members"
@@ -154,9 +153,9 @@ export default function ProjectDetailsUI() {
                 <TeamMember key={i} member={member} />
               ))}
             </div>
-          </section>
+          </motion.section>
 
-          <section className="space-y-5">
+          <motion.section className="space-y-5" variants={itemVariants}>
             <div className="flex items-center justify-between">
               <SectionHeader
                 icon={<DocumentCloud size="18" variant="Bold" />}
@@ -185,9 +184,9 @@ export default function ProjectDetailsUI() {
                 />
               ))}
             </div>
-          </section>
-        </div>
-      </div>
+          </motion.section>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

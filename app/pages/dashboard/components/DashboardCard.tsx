@@ -40,7 +40,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
               asChild
               className="rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-900"
             >
-              <Link to={href}>
+              <Link to={href} className="flex items-center">
                 <ArrowUpRight className="size-4" />
               </Link>
             </Button>

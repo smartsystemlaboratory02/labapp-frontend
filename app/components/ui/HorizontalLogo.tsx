@@ -11,9 +11,11 @@ const HorizontalLogo = () => {
         alt="SSRL Logo"
         className="p-2 bg-white rounded-md size-12"
       />
-      <div className="flex flex-col gap-0.5 leading-none">
-        <span className="font-bold text-xl tracking-tight">SSRL</span>
-        <span className="text-sm uppercase font-bold tracking-widest">
+      <div className="flex flex-col leading-none">
+        <span className="font-bold text-xl font-bruno tracking-widest leading-7">
+          SSRL
+        </span>
+        <span className="text-xs uppercase font-bold font-bruno leading-none">
           Lab App
         </span>
       </div>

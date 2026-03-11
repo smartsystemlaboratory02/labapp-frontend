@@ -27,7 +27,7 @@ const Projects = () => {
 
       <motion.div
         variants={containerVariants}
-        className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 mlg:grid-cols-3 gap-6 auto-rows-fr"
+        className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 mlg:grid-cols-3 gap-6 auto-rows-fr items-stretch"
       >
         {MOCK_STATS.map((stat, idx) => (
           <StatCard key={idx} stat={stat} />
