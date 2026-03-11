@@ -11,6 +11,7 @@ import {
   DocumentText,
   Add,
   Setting2,
+  Brodcast,
 } from "iconsax-reactjs";
 
 import { Button } from "~/components/ui/button";
@@ -25,6 +26,7 @@ import { TeamLead, TeamMember } from "./components/ProjectPersonnel";
 import { containerVariants, itemVariants } from "~/motionVariants";
 import { ArrowLeft, ChevronLeft } from "lucide-react";
 import BackButton from "~/components/ui/BackButton";
+import { SubmissionModal } from "./components/SubmissionModal";
 
 const PROJECT_MOCK = {
   id: "LAB-PRJ-2026-X4",
@@ -89,16 +91,19 @@ export default function ProjectDetailsUI() {
           {PROJECT_MOCK.status}
         </Badge>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 justify-end">
           <Button
             variant="outline"
-            className="flex items-center"
+            className="flex items-center ml-0"
             onClick={() => navigate("/projects/feedback")}
           >
             <MessageText size="18" className="mr-2" /> Feedback
           </Button>
-          <Button className="flex items-center">
-            <Setting2 size="18" className="mr-2" /> Settings
+          <Button
+            className="flex items-center ml-0"
+            onClick={() => navigate("/projects/broadcasts")}
+          >
+            <Brodcast size="18" className="mr-2" /> Broadcasts
           </Button>
         </div>
       </motion.div>
@@ -115,11 +120,11 @@ export default function ProjectDetailsUI() {
               icon={<DocumentText size="18" variant="Bold" />}
               label="Project Description"
             />
-            <div className="bg-zinc-50/50 border border-zinc-100 p-4 rounded-[2.5rem]">
+            <div className="bg-zinc-50/50 border border-zinc-200 p-4 rounded-[2rem]">
               <p className="text-zinc-600 leading-relaxed font-medium">
                 {PROJECT_MOCK.description}
               </p>
-              <div className="grid grid-cols-2 gap-8 mt-10 pt-8 border-t border-zinc-200/50">
+              <div className="grid grid-cols-2 gap-8 mt-10 pt-8 border-t border-zinc-200/50 ml-4">
                 <MetaItem label="Created By" value={PROJECT_MOCK.createdBy} />
                 <MetaItem label="Created At" value={PROJECT_MOCK.createdAt} />
               </div>
@@ -161,9 +166,7 @@ export default function ProjectDetailsUI() {
                 icon={<DocumentCloud size="18" variant="Bold" />}
                 label="Projecct Resources"
               />
-              <button className="p-1 text-secondary hover:scale-110 transition-transform">
-                <Add size="32" variant="Bold" />
-              </button>
+              <SubmissionModal />
             </div>
 
             <div className="grid gap-2">

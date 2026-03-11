@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
+  DialogClose,
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
@@ -22,7 +23,7 @@ export function AddFeedbackModal() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-125 border-none rounded-[2.5rem] p-8 shadow-2xl">
+      <DialogContent className="sm:max-w-125 border-none rounded-[2rem] p-8 shadow-2xl">
         <DialogHeader className="space-y-2">
           <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
             <Edit size="24" variant="Bold" />
@@ -47,9 +48,11 @@ export function AddFeedbackModal() {
         </div>
 
         <DialogFooter className="flex flex-col sm:flex-row gap-3 ">
-          <Button variant="outline" className="px-12 ml-0">
-            Discard
-          </Button>
+          <DialogClose asChild>
+            <Button variant="outline" className="px-12 ml-0">
+              Discard
+            </Button>
+          </DialogClose>
           <Button className="ml-0">Transmit Feedback</Button>
         </DialogFooter>
       </DialogContent>
