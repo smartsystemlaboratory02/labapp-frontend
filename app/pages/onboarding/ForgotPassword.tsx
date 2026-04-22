@@ -6,7 +6,6 @@ import { z } from "zod";
 import { useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { ArrowLeft, Mail } from "lucide-react";
-// import toast from "react-hot-toast";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -20,33 +19,49 @@ import {
 import { Input } from "~/components/ui/input";
 import Logo from "~/components/ui/Logo";
 import LinkText from "~/components/ui/LinkText";
-import { useState } from "react";
-// import Spinner from "~/components/UI/Spinner";
-// import { useRequest } from "~/hooks/useRequest";
-// import { useUserData } from "~/context/UserContext";
+import { useEffect, useState } from "react";
 import { RiseLoader } from "react-spinners";
+import { useForgotPasswordMutation } from "~/services/onboarding/queries";
+import { toast } from "sonner";
 
-// Schema validation
 const formSchema = z.object({
   email: z.email("Please enter a valid email address"),
 });
 
 const ForgotPassword = () => {
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // const { userId } = useUserData();
-  // const [sendCredRequest, credLoading] = useRequest();
+  const {
+    mutate: sendOtp,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+  } = useForgotPasswordMutation();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { email: "" },
   });
 
+  useEffect(() => {
+    if (isError) {
+      toast.error(error.message || "Failed to send OTP. Please try again.");
+    }
+
+    if (isSuccess) {
+      toast.success("OTP sent successfully!");
+
+      setTimeout(() => {
+        navigate("/reset-password", {
+          state: { email: form.getValues("email") },
+        });
+      }, 1500);
+    }
+  }, [isError, isSuccess, error]);
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsSubmitting(true);
-    console.log("Form Data:", data);
-    setTimeout(() => setIsSubmitting(false), 2000);
+    sendOtp(data);
   };
 
   return (
@@ -86,13 +101,24 @@ const ForgotPassword = () => {
               )}
             />
 
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? <RiseLoader color="white" /> : "Send OTP"}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? <RiseLoader color="white" /> : "Send OTP"}
             </Button>
           </form>
         </Form>
 
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex justify-center flex-col items-center gap-8">
+          <p className="text-sm text-zinc-500">
+            Didn't receive the code?{" "}
+            <button
+              type="button"
+              className="font-semibold text-primary hover:underline transition-all"
+              onClick={() => sendOtp({ email: form.getValues("email") })}
+              disabled={isPending}
+            >
+              Resend OTP
+            </button>{" "}
+          </p>
           <LinkText
             to="/"
             className="flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors group"

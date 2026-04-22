@@ -19,6 +19,9 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { useLogin } from "~/services/onboarding/queries";
+import { toast } from "sonner";
+import { RiseLoader } from "react-spinners";
 
 const formSchema = z.object({
   email: z.email("Please enter a valid email"),
@@ -29,17 +32,13 @@ const Login = () => {
   const navigate = useNavigate();
   // const queryClient = useQueryClient();
 
-  // const {
-  //   mutate: loginMutation,
-  //   data: response,
-  //   isPending,
-  //   isError,
-  //   isSuccess,
-  //   error,
-  // } = useMutation({
-  //   mutationFn: loginRequest,
-  //   mutationKey: ["loginRequest"],
-  // });
+  const {
+    mutate: loginMutation,
+    isPending,
+    isError,
+    isSuccess,
+    error,
+  } = useLogin();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,20 +46,21 @@ const Login = () => {
   });
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log("Form Data:", data);
-    // loginMutation(data);
+    loginMutation(data);
   };
 
-  // useEffect(() => {
-  //   if (isError) {
-  //     toast.error(error.message || "Login failed");
-  //   }
-  // }, [isError, error]);
+  useEffect(() => {
+    if (isError) {
+      toast.error(error.message || "Login failed");
+    }
 
-  // if (isSuccess) {
-  //   toast.success("Welcome back!");
-  //   setSessionStorage("accessToken", response.data?.access_token);
-  //   setSessionStorage("token_type", response.data?.token_type);
+    if (isSuccess) {
+      toast.success("Welcome back!");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
+    }
+  }, [isError, error, isSuccess]);
 
   //   setTimeout(() => {
   //     queryClient.invalidateQueries({ queryKey: ["currentUser"] });
@@ -150,15 +150,8 @@ const Login = () => {
               )}
             />
 
-            <Button
-              type="submit"
-              // disabled={isPending}
-            >
-              {/* {isPending ? (
-                  <Spinner className="w-4 h-4" />
-                ) : ( */}
-              Sign in to account
-              {/* )} */}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? <RiseLoader color="white" /> : "Sign in to account"}
             </Button>
           </form>
         </Form>

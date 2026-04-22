@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 
@@ -23,8 +23,10 @@ import {
 import Logo from "~/components/ui/Logo";
 import LinkText from "~/components/ui/LinkText";
 import { RiseLoader } from "react-spinners";
-import { useState } from "react";
+import { useEffect } from "react";
 import { ArrowLeft, ShieldTick } from "iconsax-reactjs";
+import { useVerifySignupOtp } from "~/services/onboarding/queries";
+import { toast } from "sonner";
 
 const FormSchema = z.object({
   code: z.string().min(6, "Please enter the full 6-digit code."),
@@ -32,17 +34,48 @@ const FormSchema = z.object({
 
 const OTPPage = () => {
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const state = useLocation().state;
+  const email: string = state?.email || "";
+
+  const {
+    mutate: verifyOtp,
+    isPending,
+    isSuccess,
+    isError,
+    error,
+  } = useVerifySignupOtp();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: { code: "" },
   });
 
+  useEffect(() => {
+    if (!email.trim()) {
+      toast.error("Email not found. Please enter your email");
+
+      setTimeout(() => {
+        navigate("/signup");
+      }, 1500);
+    }
+
+    if (isError) {
+      toast.error(error.message || "Failed to verify OTP. Please try again.");
+    }
+
+    if (isSuccess) {
+      toast.success("OTP verified successfully! Proceed to login.");
+
+      setTimeout(() => {
+        navigate("/", {
+          state: { email: email },
+        });
+      }, 1500);
+    }
+  });
+
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setIsSubmitting(true);
-    console.log("Form Data:", data);
-    setTimeout(() => setIsSubmitting(false), 2000);
+    verifyOtp({ email: email, otp: Number(data.code) });
   };
 
   return (
@@ -97,10 +130,10 @@ const OTPPage = () => {
 
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isPending}
               className="flex items-center justify-center gap-2"
             >
-              {isSubmitting ? (
+              {isPending ? (
                 <RiseLoader className="text-white" />
               ) : (
                 <>

@@ -106,7 +106,9 @@ const Signup = () => {
     }
 
     if (isSuccess) {
-      navigate("/onboarding/enter-otp");
+      navigate("/enter-otp", {
+        state: { email: form.getValues("email") },
+      });
     }
   });
 

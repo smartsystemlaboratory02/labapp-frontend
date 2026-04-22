@@ -25,12 +25,12 @@ api.interceptors.response.use(
   },
 );
 
-export const makeRequest = async <TResponse = unknown, TData = unknown>(
+export const makeRequest = async (
   path: string,
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE" = "GET",
-  data?: TData,
+  data?: any,
 ) => {
-  const res = await api.request<TResponse>({
+  const res = await api.request({
     url: path,
     method,
     data,
