@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -30,57 +30,101 @@ import {
 import Logo from "~/components/ui/Logo";
 
 import { RiseLoader } from "react-spinners";
+import { useSignup } from "~/services/onboarding/queries";
 
-const formSchema = z.object({
-  firstname: z.string().min(1, "First name is required"),
-  lastname: z.string().min(1, "Last name is required"),
-  email: z.email("Invalid email address"),
-  phoneNum: z
-    .string()
-    .min(1, "Phone number is required")
-    .max(11, "Invalid  phone number"), // TODO: Add regex validation for Nigerian phone numbers
-  stack: z.string().min(1, "Please select a stack"),
-  niche: z.string().min(1, "Niche is required"),
-  bio: z.string().optional(),
-  role: z.string().min(1, "Please select a role"),
-  dob: z.date({ error: "Date of birth is required" }).optional(), //TODO: Check the required error
-});
+import { toast } from "sonner";
+
+const formSchema = z
+  .object({
+    first_name: z.string().min(1, "First name is required"),
+    last_name: z.string().min(1, "Last name is required"),
+    email: z.email("Invalid email address"),
+    phone: z
+      .string()
+      .min(1, "Phone number is required")
+      .max(11, "Invalid  phone number"), // TODO: Add regex validation for Nigerian phone numbers
+    stack: z.string().min(1, "Please select a stack"),
+    niche: z.string().min(1, "Niche is required"),
+    bio: z.string().optional(),
+    role: z.string().min(1, "Please select a role"),
+    password: z.string().min(8, "Password must be at least 8 characters long"),
+    confirmPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters long"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 const Signup = () => {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      firstname: "",
-      lastname: "",
-      email: "",
-      phoneNum: "",
-      stack: "",
-      niche: "",
-      bio: "",
-      role: "Intern",
-    },
-  });
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const handleFileClick = () => {
+    fileInputRef.current?.click();
+  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0] ?? null;
+    setSelectedImage(file);
     if (file) {
       setPreviewImage(URL.createObjectURL(file));
     }
   };
 
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone: "",
+      stack: "",
+      niche: "",
+      bio: "",
+      role: "intern",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const {
+    mutateAsync: signUp,
+    isPending,
+    isError,
+    error,
+    isSuccess,
+  } = useSignup();
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(error.message || "Something went wrong");
+    }
+
+    if (isSuccess) {
+      navigate("/onboarding/enter-otp");
+    }
+  });
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    setIsSubmitting(true);
+    const formData = new FormData();
+
+    if (selectedImage) formData.append("profile_img", selectedImage);
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key === "confirmPassword") return;
+      formData.append(key, String(value));
+    });
+
+    await signUp(formData);
     console.log("Form Data:", data);
-    setTimeout(() => setIsSubmitting(false), 2000);
   };
 
   return (
-    // <div className="min-h-screen w-full flex items-center justify-center bg-[#fafafa] dark:bg-[#050505] p-4 py-12">
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -103,7 +147,7 @@ const Signup = () => {
             <div className="flex flex-col items-center justify-center gap-4 mb-8">
               <div
                 className="group relative w-32 h-32 rounded-full bg-zinc-100 dark:bg-zinc-900 border-2 border-dashed border-zinc-300 dark:border-zinc-700 flex items-center justify-center overflow-hidden cursor-pointer hover:border-primary transition-all"
-                onClick={() => fileInputRef.current?.click()}
+                onClick={handleFileClick}
               >
                 {previewImage ? (
                   <img
@@ -135,7 +179,7 @@ const Signup = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="firstname"
+                name="first_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
@@ -151,7 +195,7 @@ const Signup = () => {
 
               <FormField
                 control={form.control}
-                name="lastname"
+                name="last_name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
@@ -175,7 +219,7 @@ const Signup = () => {
                       <Asterisk className="w-3 h-3 text-red-500" />
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="j.doe@ssrl.com" {...field} />
+                      <Input placeholder="johndoe@ssrl.com" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -184,7 +228,7 @@ const Signup = () => {
 
               <FormField
                 control={form.control}
-                name="phoneNum"
+                name="phone"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
@@ -200,11 +244,54 @@ const Signup = () => {
 
               <FormField
                 control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
+                      Password <Asterisk className="w-3 h-3 text-red-500" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="VeryStrongPassword123!"
+                        className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 focus:ring-primary/20 transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
+                      Confirm Password{" "}
+                      <Asterisk className="w-3 h-3 text-red-500" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="VeryStrongPassword123!"
+                        className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50 border-zinc-200 dark:border-zinc-800 focus:ring-primary/20 transition-all"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name="stack"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
-                      Stack
+                      Stack <Asterisk className="w-3 h-3 text-red-500" />
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -265,8 +352,8 @@ const Signup = () => {
               )}
             />
 
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
                 <RiseLoader color="white" />
               ) : (
                 "Create Personnel Account"

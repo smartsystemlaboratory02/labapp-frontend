@@ -63,7 +63,7 @@ const PROJECT_MOCK = {
   },
 };
 
-export default function ProjectDetailsUI() {
+export default function ProjectDetails() {
   const navigate = useNavigate();
   return (
     <div className="p-6 lg:p-10 mx-auto space-y-10 selection:bg-primary/10 max-w-400">
@@ -164,7 +164,7 @@ export default function ProjectDetailsUI() {
             <div className="flex items-center justify-between">
               <SectionHeader
                 icon={<DocumentCloud size="18" variant="Bold" />}
-                label="Projecct Resources"
+                label="Projecct Submissions"
               />
               <SubmissionModal />
             </div>

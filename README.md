@@ -86,3 +86,111 @@ This template comes with [Tailwind CSS](https://tailwindcss.com/) already config
 
 Built with ❤️ using React Router.
 
+
+```
+LabApp
+├─ .dockerignore
+├─ app
+│  ├─ app.css
+│  ├─ components
+│  │  ├─ layout
+│  │  │  └─ sidebar.tsx
+│  │  └─ ui
+│  │     ├─ BackButton.tsx
+│  │     ├─ badge.tsx
+│  │     ├─ button.tsx
+│  │     ├─ card.tsx
+│  │     ├─ dialog.tsx
+│  │     ├─ field.tsx
+│  │     ├─ form.tsx
+│  │     ├─ GoogleLogo.tsx
+│  │     ├─ HorizontalLogo.tsx
+│  │     ├─ input-otp.tsx
+│  │     ├─ input.tsx
+│  │     ├─ label.tsx
+│  │     ├─ LinkText.tsx
+│  │     ├─ Logo.tsx
+│  │     ├─ Or.tsx
+│  │     ├─ PageHeader.tsx
+│  │     ├─ SectionHeader.tsx
+│  │     ├─ select.tsx
+│  │     ├─ separator.tsx
+│  │     ├─ sheet.tsx
+│  │     ├─ sidebar.tsx
+│  │     ├─ skeleton.tsx
+│  │     ├─ tabs.tsx
+│  │     ├─ textarea.tsx
+│  │     ├─ TextLogo.tsx
+│  │     └─ tooltip.tsx
+│  ├─ dashboardDemo.ts
+│  ├─ hooks
+│  │  └─ use-mobile.ts
+│  ├─ layouts
+│  │  ├─ main.tsx
+│  │  └─ onboarding.tsx
+│  ├─ lib
+│  │  └─ utils.ts
+│  ├─ motionVariants.ts
+│  ├─ pages
+│  │  ├─ dashboard
+│  │  │  ├─ components
+│  │  │  │  ├─ DashboardCard.tsx
+│  │  │  │  ├─ NotificationItem.tsx
+│  │  │  │  ├─ ProjectItem.tsx
+│  │  │  │  ├─ ReportItem.tsx
+│  │  │  │  ├─ RequestItem.tsx
+│  │  │  │  ├─ TodoItem.tsx
+│  │  │  │  └─ WelcomeHero.tsx
+│  │  │  └─ dashboard.tsx
+│  │  ├─ onboarding
+│  │  │  ├─ forgotPassword.tsx
+│  │  │  ├─ login.tsx
+│  │  │  ├─ otp.tsx
+│  │  │  ├─ resetPassword.tsx
+│  │  │  └─ signup.tsx
+│  │  ├─ personnel
+│  │  │  ├─ components
+│  │  │  │  └─ PersonnelCard.tsx
+│  │  │  └─ personnel.tsx
+│  │  └─ projects
+│  │     ├─ addProject.tsx
+│  │     ├─ broadcast.tsx
+│  │     ├─ components
+│  │     │  ├─ BroadcastCard.tsx
+│  │     │  ├─ FeedbackCard.tsx
+│  │     │  ├─ FeedbackModal.tsx
+│  │     │  ├─ ProjectCard.tsx
+│  │     │  ├─ ProjectObj.tsx
+│  │     │  ├─ ProjectPersonnel.tsx
+│  │     │  ├─ ResourceLink.tsx
+│  │     │  ├─ StatCard.tsx
+│  │     │  └─ SubmissionModal.tsx
+│  │     ├─ feedback.tsx
+│  │     ├─ projectDetails.tsx
+│  │     └─ projects.tsx
+│  ├─ root.tsx
+│  ├─ routes.ts
+│  ├─ services
+│  │  └─ api.ts
+│  ├─ types.ts
+│  └─ utils
+│     └─ getSession.ts
+├─ components.json
+├─ Dockerfile
+├─ package.json
+├─ pnpm-lock.yaml
+├─ public
+│  ├─ favicon.ico
+│  ├─ logo.svg
+│  ├─ onboarding-image.jpg
+│  ├─ signup-image.jpg
+│  ├─ ssrl-logo.png
+│  ├─ workgif.webp
+│  └─ workgif2.webp
+├─ react-router.config.ts
+├─ README.md
+├─ tsconfig.json
+├─ uuaug.tsx
+└─ vite.config.ts
+
+```
