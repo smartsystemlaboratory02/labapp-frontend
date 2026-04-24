@@ -1,5 +1,7 @@
 import { makeRequest } from "../api";
 
+export const refreshRequest = () => makeRequest("/auth/refresh-session", "POST");
+
 export const signupRequest = (data: FormData) =>
   makeRequest("/auth/register", "POST", data);
 

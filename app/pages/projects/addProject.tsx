@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useMemo } from "react";
+import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import {
@@ -9,8 +9,6 @@ import {
   Trash,
   Users,
   Calendar as CalendarIcon,
-  ClipboardList,
-  ArrowRight,
   Info,
 } from "lucide-react";
 import { useNavigate } from "react-router";
@@ -34,46 +32,110 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { motion } from "framer-motion";
 import PageHeader from "~/components/ui/PageHeader";
 import { Add, ArrowLeft2 } from "iconsax-reactjs";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Calendar } from "~/components/ui/calendar";
+import { format } from "date-fns";
+import { useGetAllPersonnelQuery } from "~/services/personnels/queries";
+import Spinner from "~/components/ui/Spinner";
+import { toast } from "sonner";
+import { type Personnel } from "~/services/personnels/types";
+import { getInitials } from "~/utils/utils";
 
 const projectSchema = z.object({
   name: z.string().min(1, "Project name is required"),
   description: z.string().min(10, "Description too short"),
-  deadline: z.string().min(1, "Deadline is required"),
-  team: z.array(z.string()).min(1, "Assign at least one member"),
-  leads: z.array(z.string()).min(1, "Assign at least one lead"),
+  target_deadline: z.date().refine((val) => val !== null && val !== undefined, {
+    message: "Deadline is required",
+  }),
+  team_members: z.array(
+    z.object({
+      user_id: z.string().min(1, "At least one team member is required"),
+      role: z.enum(["intern", "lead"]),
+    }),
+  ),
+  project_objectives: z.array(
+    z.object({
+      objective: z
+        .string()
+        .min(1, "At least one project objective is required"),
+      status: z.string(),
+    }),
+  ),
 });
 
 const AddProject = () => {
   const navigate = useNavigate();
-  const [objectives, setObjectives] = useState<string[]>([]);
-  const [currentObjective, setCurrentObjective] = useState("");
 
   const form = useForm<z.infer<typeof projectSchema>>({
     resolver: zodResolver(projectSchema),
     defaultValues: {
       name: "",
       description: "",
-      deadline: "",
-      team: [],
-      leads: [],
+      target_deadline: new Date(),
+      team_members: [],
+      project_objectives: [{ objective: "", status: "in_progress" }],
     },
   });
 
-  const addObjective = () => {
-    if (currentObjective.trim()) {
-      setObjectives([...objectives, currentObjective.trim()]);
-      setCurrentObjective("");
-    }
-  };
+  const {
+    append: teamMembersAppend,
+    remove: teamMembersRemove,
+    replace: teamMemberReplace,
+  } = useFieldArray({
+    control: form.control,
+    name: "team_members",
+  });
 
-  const MOCK_MEMBERS = [
-    { id: "1", name: "Dr. Arinze" },
-    { id: "2", name: "Sarah Chen" },
-    { id: "3", name: "Ibrahim Sule" },
-  ];
+  const {
+    fields: projectObjsFields,
+    append: projectObjsAppend,
+    remove: projectObjsRemove,
+  } = useFieldArray({
+    control: form.control,
+    name: "project_objectives",
+  });
+
+  const teamMembers = useWatch({
+    control: form.control,
+    name: "team_members",
+  });
+
+  const {
+    data: allPersonnel = [],
+    isFetching: isGettingAllPersonnel,
+    isError: isGettingAllPersonnelError,
+    error: getAllPersonnelError,
+  } = useGetAllPersonnelQuery();
+
+  // const
+
+  useEffect(() => {
+    console.log(allPersonnel);
+
+    if (isGettingAllPersonnelError) {
+      toast.error(
+        getAllPersonnelError.message ||
+          "Something went wrong. Please try again.",
+      );
+
+      setTimeout(() => {
+        navigate("/projects");
+      }, 2000);
+    }
+  }, [isGettingAllPersonnelError, getAllPersonnelError]);
+
+  const personnelMap = useMemo(() => {
+    return new Map(allPersonnel.map((p) => [p.id, p]));
+  }, [allPersonnel]);
+
+  const onSubmit = (data: z.infer<typeof projectSchema>) => {};
 
   return (
     <div className="p-6 lg:p-10 max-w-400 mx-auto space-y-8">
@@ -145,53 +207,50 @@ const AddProject = () => {
                   </h3>
                   <Badge
                     variant="outline"
-                    className="font-mono text-[10px] text-primary border-primary/20"
+                    className="font-mono text-xs text-primary border-primary/20 font-semibold"
                   >
-                    {objectives.length}
+                    {form.watch(`project_objectives`).length}
                   </Badge>
                 </div>
 
-                <div className="flex gap-2 shrink-0">
-                  <Input
-                    value={currentObjective}
-                    onChange={(e) => setCurrentObjective(e.target.value)}
-                    placeholder="Add objective..."
-                    className="flex-1 h-11"
-                  />
-                  {/* TODO: Use arrayItems in react form */}
-                  <Button
-                    type="button"
-                    onClick={addObjective}
-                    className="bg-zinc-900 text-white h-10 w-10 p-0 rounded-lg"
-                  >
-                    <Plus size={16} />
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                {objectives.map((obj, i) => (
-                  <div
-                    key={i}
-                    className="group flex items-center justify-between p-3 bg-white border border-zinc-100 rounded-lg hover:border-primary/30 transition-all shadow-sm"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="h-1 w-1 bg-primary rounded-full" />
-                      <span className="text-sm text-zinc-600">{obj}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setObjectives(objectives.filter((_, idx) => idx !== i))
-                      }
-                    >
-                      <Trash
-                        size={14}
-                        className="text-zinc-300 group-hover:text-red-500"
+                {projectObjsFields.map((field, index) => (
+                  <div className="flex items-center gap-5" key={field.id}>
+                    <div className="flex-1">
+                      <FormField
+                        control={form.control}
+                        name={`project_objectives.${index}.objective`}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            placeholder="Add objective..."
+                            className="flex-1 h-9 shrink-0 grow w-full"
+                          />
+                        )}
                       />
-                    </button>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => projectObjsRemove(index)}
+                      className="p-0 text-zinc-400 hover:text-red-500 rounded-2xl hover:bg-zinc-100 items-center justify-center flex ml-0 mt-0 border"
+                    >
+                      <Trash size={12} />
+                    </Button>
                   </div>
                 ))}
+
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    projectObjsAppend({ objective: "", status: "in_progress" })
+                  }
+                  className="h-8 w-8 rounded-lg border-dashed border-zinc-300"
+                >
+                  <Add size={14} />
+                </Button>
               </div>
             </div>
 
@@ -199,119 +258,262 @@ const AddProject = () => {
               <div className="sticky top-24 space-y-8 bg-zinc-50/50 border border-zinc-100 p-8 rounded-[2rem]">
                 <FormField
                   control={form.control}
-                  name="deadline"
+                  name="target_deadline"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[10px] font-black uppercase text-zinc-400 flex items-center gap-2 tracking-tighter">
+                    <FormItem className="flex flex-col">
+                      <FormLabel className="text-xs font-black uppercase text-zinc-400 flex items-center gap-2 tracking-tighter">
                         <CalendarIcon size={12} /> Target Deadline
                       </FormLabel>
-                      <FormControl>
-                        <Input
-                          type="date"
-                          {...field}
-                          className="border-zinc-200 bg-white h-11"
-                        />
-                      </FormControl>
-                      <FormMessage />
+
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <button
+                              type="button"
+                              className={`flex w-full items-center gap-3 rounded-2xl border-2 bg-slate-50/50 px-5 py-4 text-left transition-all hover:border-slate-200 focus:border-primary outline-none ${
+                                !field.value
+                                  ? "text-slate-400"
+                                  : "text-slate-900"
+                              } border-slate-200 h-full`}
+                            >
+                              <CalendarIcon
+                                size={18}
+                                className="text-slate-400"
+                              />
+                              <span className="text-xs font-medium">
+                                {field.value
+                                  ? format(field.value, "PPP")
+                                  : "Target Deadline"}
+                              </span>
+                            </button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto p-0 rounded-2xl border-slate-200 shadow-2xl"
+                          align="start"
+                        >
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage className="text-xs text-rose-500 ml-1" />
                     </FormItem>
                   )}
                 />
 
+                {/* Team members */}
                 <div className="space-y-8">
                   <FormField
                     control={form.control}
-                    name="team"
+                    name="team_members"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs font-black uppercase text-zinc-400 flex items-center gap-2">
                           <Users size={12} /> Choose Team Members
                         </FormLabel>
                         <Select
-                          onValueChange={(val) =>
-                            !field.value.includes(val) &&
-                            field.onChange([...field.value, val])
-                          }
+                          onValueChange={(val) => {
+                            const existsInList = teamMembers.some(
+                              (member) => member.user_id === val,
+                            );
+
+                            if (!existsInList) {
+                              teamMembersAppend({
+                                user_id: val,
+                                role: "intern",
+                              });
+                            }
+                          }}
                         >
                           <FormControl>
                             <SelectTrigger className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50">
-                              <SelectValue placeholder="Assign personnel..." />
+                              <SelectValue
+                                placeholder={
+                                  isGettingAllPersonnel
+                                    ? "Loading members..."
+                                    : "Assign members"
+                                }
+                              />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent position="popper">
-                            {MOCK_MEMBERS.map((m) => (
-                              <SelectItem key={m.id} value={m.id}>
-                                {m.name}
-                              </SelectItem>
-                            ))}
+                            {isGettingAllPersonnel ? (
+                              <Spinner className="mx-auto my-4" />
+                            ) : (
+                              allPersonnel.map((member: Personnel) => (
+                                <SelectItem
+                                  key={member.id}
+                                  value={member.id}
+                                  className="flex items-center gap-6"
+                                >
+                                  <Avatar>
+                                    <AvatarImage
+                                      src={member.profile_img || undefined}
+                                    />
+                                    <AvatarFallback>
+                                      {member.first_name || member.last_name
+                                        ? getInitials(
+                                            member.first_name,
+                                            member.last_name,
+                                          )
+                                        : "?"}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  {member.first_name} {member.last_name}
+                                </SelectItem>
+                              ))
+                            )}
                           </SelectContent>
                         </Select>
 
                         <div className="flex flex-wrap gap-2 pt-2">
-                          {field.value.map((id) => (
-                            <button
-                              key={id}
-                              type="button"
-                              onClick={() =>
-                                field.onChange(
-                                  field.value.filter((mId) => mId !== id),
-                                )
-                              }
-                              className="group flex items-center gap-2 px-3 py-1 bg-white border border-zinc-200 rounded-full text-xs font-medium hover:border-red-200 hover:bg-red-50 transition-all"
-                            >
-                              {MOCK_MEMBERS.find((m) => m.id === id)?.name}
-                              <Plus
-                                size={12}
-                                className="rotate-45 text-zinc-400 group-hover:text-red-500"
-                              />
-                            </button>
-                          ))}
+                          {teamMembers
+                            .filter((member) => member.role === "intern")
+                            .map((member) => (
+                              <button
+                                key={member.user_id}
+                                type="button"
+                                onClick={() => {
+                                  const index = teamMembers.findIndex(
+                                    (teamMember) =>
+                                      teamMember.user_id === member.user_id,
+                                  );
+
+                                  if (index !== -1) {
+                                    teamMembersRemove(index);
+                                  }
+                                }}
+                                className="group flex items-center gap-2 px-3 py-1 bg-white border border-zinc-200 rounded-full text-xs font-medium hover:border-red-200 hover:bg-red-50 transition-all"
+                              >
+                                {(() => {
+                                  const selectedMember = personnelMap.get(
+                                    member.user_id,
+                                  );
+
+                                  return selectedMember
+                                    ? `${selectedMember.first_name ?? ""} ${selectedMember.last_name ?? ""}`.trim()
+                                    : "Unknown";
+                                })()}
+                                <Plus
+                                  size={12}
+                                  className="rotate-45 text-zinc-400 group-hover:text-red-500"
+                                />
+                              </button>
+                            ))}
                         </div>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
+                  {/* Team leads */}
                   <FormField
                     control={form.control}
-                    name="leads"
+                    name="team_members"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs font-black uppercase text-secondary">
                           Project Leads
                         </FormLabel>
                         <Select
-                          onValueChange={(val) =>
-                            !field.value.includes(val) &&
-                            field.onChange([...field.value, val])
-                          }
+                          onValueChange={(val) => {
+                            const index = teamMembers.findIndex(
+                              (member) => member.user_id === val,
+                            );
+
+                            if (index !== -1) {
+                              const updated = [...teamMembers];
+                              updated[index].role = "lead";
+
+                              teamMemberReplace(updated);
+                            }
+                          }}
                         >
                           <SelectTrigger className="border-zinc-200 h-11 bg-white">
-                            <SelectValue placeholder="Assign leads..." />
+                            <SelectValue
+                              placeholder={
+                                isGettingAllPersonnel
+                                  ? "Loading leads..."
+                                  : "Assign leads"
+                              }
+                            />
                           </SelectTrigger>
                           <SelectContent position="popper">
-                            {MOCK_MEMBERS.filter((m) =>
-                              form.watch("team").includes(m.id),
-                            ).map((m) => (
-                              <SelectItem key={m.id} value={m.id}>
-                                {m.name}
-                              </SelectItem>
-                            ))}
+                            {allPersonnel
+                              .filter((member) =>
+                                teamMembers.some(
+                                  (teamMemeber) =>
+                                    teamMemeber.user_id === member.id,
+                                ),
+                              )
+                              .map((member) => (
+                                <SelectItem
+                                  key={member.id}
+                                  value={member.id}
+                                  className="flex items-center gap-6"
+                                >
+                                  <Avatar>
+                                    <AvatarImage
+                                      src={member.profile_img || undefined}
+                                    />
+                                    <AvatarFallback>
+                                      {member.first_name || member.last_name
+                                        ? getInitials(
+                                            member.first_name,
+                                            member.last_name,
+                                          )
+                                        : "?"}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  {member.first_name} {member.last_name}
+                                </SelectItem>
+                              ))}
                           </SelectContent>
                         </Select>
+
                         <div className="flex flex-wrap gap-2 pt-2">
-                          {field.value.map((id) => (
-                            <Badge
-                              key={id}
-                              className="bg-secondary text-white border-none rounded-full px-3 py-1 text-[10px] flex gap-1 items-center shadow-md shadow-secondary/20 cursor-pointer"
-                              onClick={() =>
-                                field.onChange(
-                                  field.value.filter((mId) => mId !== id),
-                                )
-                              }
-                            >
-                              {MOCK_MEMBERS.find((m) => m.id === id)?.name} ×
-                            </Badge>
-                          ))}
+                          {teamMembers
+                            .filter((member) => member.role === "lead")
+                            .map((member) => (
+                              <button
+                                key={member.user_id}
+                                type="button"
+                                onClick={(event) => {
+                                  const index = teamMembers.findIndex(
+                                    (teamMember) =>
+                                      teamMember.user_id === member.user_id,
+                                  );
+
+                                  if (index !== -1) {
+                                    const updated = [...teamMembers];
+                                    updated[index].role = "intern";
+
+                                    teamMemberReplace(updated);
+                                  }
+                                }}
+                                className="group flex items-center gap-2 px-3 py-1 bg-white border border-zinc-200 rounded-full text-xs font-medium hover:border-red-200 hover:bg-red-50 transition-all"
+                              >
+                                {(() => {
+                                  const selectedMember = allPersonnel.find(
+                                    (m) => m.id === member.user_id,
+                                  );
+
+                                  return selectedMember
+                                    ? `${selectedMember.first_name ?? ""} ${selectedMember.last_name ?? ""}`.trim()
+                                    : "Unknown";
+                                })()}
+                                <Plus
+                                  size={12}
+                                  className="rotate-45 text-zinc-400 group-hover:text-red-500"
+                                />
+                              </button>
+                            ))}
                         </div>
                       </FormItem>
                     )}
@@ -328,7 +530,14 @@ const AddProject = () => {
               </div>
             </div>
 
-            <Button type="submit" className="flex items-center align-self-end" disabled> <Add className="text-white"/> Add Project</Button>
+            <Button
+              type="submit"
+              className="flex items-center align-self-end mt-4 ml-auto"
+              disabled
+            >
+              {" "}
+              <Add className="text-white" /> Add Project
+            </Button>
           </form>
         </Form>
       </main>
