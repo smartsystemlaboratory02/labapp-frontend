@@ -1,5 +1,7 @@
 import { makeRequest } from "../api";
-import type { Project } from "./types";
+import type { Project, ProjectInfo } from "./types";
 
 export const createProjectRequest = (data: Project) =>
-  makeRequest("/personnels", "POST", data);
+  makeRequest("/projects/", "POST", data);
+
+export const getProjectsRequest = () => makeRequest<ProjectInfo[]>(`/projects/`, "GET");

@@ -47,6 +47,7 @@ import Spinner from "~/components/ui/Spinner";
 import { toast } from "sonner";
 import { type Personnel } from "~/services/personnels/types";
 import { getInitials } from "~/utils/utils";
+import { useCreateProjectMutation } from "~/services/projects/queries";
 
 const projectSchema = z.object({
   name: z.string().min(1, "Project name is required"),
@@ -54,20 +55,24 @@ const projectSchema = z.object({
   target_deadline: z.date().refine((val) => val !== null && val !== undefined, {
     message: "Deadline is required",
   }),
-  team_members: z.array(
-    z.object({
-      user_id: z.string().min(1, "At least one team member is required"),
-      role: z.enum(["intern", "lead"]),
-    }),
-  ),
-  project_objectives: z.array(
-    z.object({
-      objective: z
-        .string()
-        .min(1, "At least one project objective is required"),
-      status: z.string(),
-    }),
-  ),
+  project_members: z
+    .array(
+      z.object({
+        user_id: z.string(),
+        role: z.enum(["intern", "lead"]),
+      }),
+    )
+    .min(1, "At least one team member is required"),
+  project_objectives: z
+    .array(
+      z.object({
+        objective: z
+          .string()
+          .min(1, "At least one project objective is required"),
+        status: z.string(),
+      }),
+    )
+    .min(1, "At least one project objective is required"),
 });
 
 const AddProject = () => {
@@ -79,7 +84,7 @@ const AddProject = () => {
       name: "",
       description: "",
       target_deadline: new Date(),
-      team_members: [],
+      project_members: [],
       project_objectives: [{ objective: "", status: "in_progress" }],
     },
   });
@@ -90,7 +95,7 @@ const AddProject = () => {
     replace: teamMemberReplace,
   } = useFieldArray({
     control: form.control,
-    name: "team_members",
+    name: "project_members",
   });
 
   const {
@@ -104,7 +109,7 @@ const AddProject = () => {
 
   const teamMembers = useWatch({
     control: form.control,
-    name: "team_members",
+    name: "project_members",
   });
 
   const {
@@ -114,7 +119,13 @@ const AddProject = () => {
     error: getAllPersonnelError,
   } = useGetAllPersonnelQuery();
 
-  // const
+  const {
+    mutate: createProject,
+    isPending: isCreatingProject,
+    isError: isCreatingProjectError,
+    error: createProjectError,
+    isSuccess: projectCreated,
+  } = useCreateProjectMutation();
 
   useEffect(() => {
     console.log(allPersonnel);
@@ -129,13 +140,38 @@ const AddProject = () => {
         navigate("/projects");
       }, 2000);
     }
-  }, [isGettingAllPersonnelError, getAllPersonnelError]);
+
+    if (isCreatingProjectError) {
+      toast.error(
+        createProjectError.message || "Something went wrong. Please try again.",
+      );
+    }
+
+    if (projectCreated) {
+      toast.success("Project created successfully");
+
+      setTimeout(() => {
+        navigate("/projects");
+      }, 2000);
+    }
+  }, [
+    isGettingAllPersonnelError,
+    getAllPersonnelError,
+    isCreatingProjectError,
+    createProjectError,
+    projectCreated,
+  ]);
 
   const personnelMap = useMemo(() => {
     return new Map(allPersonnel.map((p) => [p.id, p]));
   }, [allPersonnel]);
 
-  const onSubmit = (data: z.infer<typeof projectSchema>) => {};
+  const onSubmit = (data: z.infer<typeof projectSchema>) => {
+    createProject({
+      ...data,
+      target_deadline: data.target_deadline.toISOString(),
+    });
+  };
 
   return (
     <div className="p-6 lg:p-10 max-w-400 mx-auto space-y-8">
@@ -157,7 +193,10 @@ const AddProject = () => {
 
       <main className="max-w-300 mx-auto p-6 ">
         <Form {...form}>
-          <form className="grid grid-cols-1 md:grid-cols-12 gap-8">
+          <form
+            className="grid grid-cols-1 md:grid-cols-12 gap-8"
+            onSubmit={form.handleSubmit(onSubmit)}
+          >
             <div className="md:col-span-7 space-y-12">
               <section className="space-y-6">
                 <div className="grid gap-6">
@@ -200,6 +239,7 @@ const AddProject = () => {
                 </div>
               </section>
 
+              {/* Project Objectives */}
               <div className="space-y-4">
                 <div className="flex items-center justify-between border-b-2 border-zinc-200 pb-1">
                   <h3 className="text-sm font-bold uppercase tracking-widest text-zinc-600">
@@ -220,11 +260,14 @@ const AddProject = () => {
                         control={form.control}
                         name={`project_objectives.${index}.objective`}
                         render={({ field }) => (
-                          <Input
-                            {...field}
-                            placeholder="Add objective..."
-                            className="flex-1 h-9 shrink-0 grow w-full"
-                          />
+                          <FormItem>
+                            <Input
+                              {...field}
+                              placeholder="Add objective..."
+                              className="flex-1 h-9 shrink-0 grow w-full"
+                            />
+                            <FormMessage />
+                          </FormItem>
                         )}
                       />
                     </div>
@@ -242,14 +285,13 @@ const AddProject = () => {
 
                 <Button
                   type="button"
-                  variant="outline"
                   size="sm"
                   onClick={() =>
                     projectObjsAppend({ objective: "", status: "in_progress" })
                   }
-                  className="h-8 w-8 rounded-lg border-dashed border-zinc-300"
+                  className="h-8 w-12 rounded-full border-dashed border-zinc-300 bg-primary text-white hover flex items-center"
                 >
-                  <Add size={14} />
+                  <Add size={18} />
                 </Button>
               </div>
             </div>
@@ -311,7 +353,7 @@ const AddProject = () => {
                 <div className="space-y-8">
                   <FormField
                     control={form.control}
-                    name="team_members"
+                    name="project_members"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs font-black uppercase text-zinc-400 flex items-center gap-2">
@@ -415,7 +457,7 @@ const AddProject = () => {
                   {/* Team leads */}
                   <FormField
                     control={form.control}
-                    name="team_members"
+                    name="project_members"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-xs font-black uppercase text-secondary">
@@ -532,11 +574,16 @@ const AddProject = () => {
 
             <Button
               type="submit"
-              className="flex items-center align-self-end mt-4 ml-auto"
-              disabled
+              className="align-self-end mt-4 ml-auto flex items-center gap-2"
+              disabled={isCreatingProject}
             >
-              {" "}
-              <Add className="text-white" /> Add Project
+              {isCreatingProject ? (
+                <Spinner />
+              ) : (
+                <div className="flex items-center ">
+                  <Add className="text-white" /> Add Project{" "}
+                </div>
+              )}
             </Button>
           </form>
         </Form>

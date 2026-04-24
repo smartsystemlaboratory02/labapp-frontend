@@ -58,9 +58,12 @@ api.interceptors.response.use(
         );
 
         console.log("Retrying requests with new access token");
-        return api(originalRequest); // retry original request
+        return api(originalRequest);
       } catch (err) {
         processQueue(err, null);
+
+        window.location.href = "/";
+
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
