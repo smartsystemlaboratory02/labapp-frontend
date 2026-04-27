@@ -10,3 +10,6 @@ export const getProjectsRequest = () =>
 export const editProjectRequest = (projectId: string, data: Partial<ProjectInfo>) => {
   return makeRequest(`/projects/${projectId}`, "PUT", data);
 };
+
+export const deleteProjectRequest = (projectId: string) =>
+  makeRequest(`/projects/${projectId}`, "DELETE");

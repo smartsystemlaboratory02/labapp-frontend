@@ -12,12 +12,13 @@ import {
   Add,
   Setting2,
   Brodcast,
+  Trash,
 } from "iconsax-reactjs";
 
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import PageHeader from "~/components/ui/PageHeader";
-import { useLocation, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import SectionHeader from "~/components/ui/SectionHeader";
 import ProjectObj from "./components/ProjectObj";
@@ -32,7 +33,13 @@ import type { ProjectInfo } from "~/services/projects/types";
 import { format } from "date-fns";
 import { PROJECT_STATUS_MAP } from "~/services/projects/utils";
 import { cn } from "~/lib/utils";
-import { Edit } from "lucide-react";
+import { Delete, Edit } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
+import { DeleteProjectModal } from "./components/DeleteProjectModal";
 
 // const PROJECT_MOCK = {
 //   id: "LAB-PRJ-2026-X4",
@@ -120,27 +127,39 @@ export default function ProjectDetails() {
         </Badge>
 
         <div className="flex items-center gap-2 sm:gap-3 justify-end">
-          <Button
-            variant="ghost"
-            size="icon"
-            // onClick={() => navigate(-1)}
-            className="rounded-2xl hover:bg-zinc-100 items-center justify-center flex ml-0 mt-0 border"
-          >
-            <Edit size="32" />
-          </Button>
-          <Button
-            variant="outline"
-            className="flex items-center ml-0"
-            onClick={() => navigate(`/projects/${project.id}/feedback`)}
-          >
-            <MessageText size="18" className="mr-2" /> Feedback
-          </Button>
-          <Button
-            className="flex items-center ml-0"
-            onClick={() => navigate("/projects/broadcasts")}
-          >
-            <Brodcast size="18" className="mr-2" /> Broadcasts
-          </Button>
+          <Tooltip>
+            <TooltipTrigger>
+              <Link
+                to={`/projects/${project.id}/edit`}
+                state={{ project }}
+                className="ml-auto"
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-2xl hover:bg-zinc-100 items-center justify-center flex ml-0 mt-0 border"
+                >
+                  <Edit size="32" />
+                </Button>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Edit project</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <DeleteProjectModal projectId={project.id} />
+
+          <Link to={`/projects/${project.id}/feedback`} className="ml-auto">
+            <Button variant="outline" className="flex items-center ml-0">
+              <MessageText size="18" className="mr-2" /> Feedback
+            </Button>
+          </Link>
+          <Link to={`/projects/${project.id}/broadcasts`} className="ml-auto">
+            <Button className="flex items-center ml-0">
+              <Brodcast size="18" className="mr-2" /> Broadcasts
+            </Button>
+          </Link>
         </div>
       </motion.div>
 

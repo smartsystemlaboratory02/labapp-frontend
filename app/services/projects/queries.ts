@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-query";
 import {
   createProjectRequest,
+  deleteProjectRequest,
   editProjectRequest,
   getProjectsRequest,
 } from "./requests";
@@ -38,6 +39,17 @@ export const useEditProjectMutation = (projectId: string) => {
     mutationFn: (data: Partial<ProjectInfo>) =>
       editProjectRequest(projectId, data),
     mutationKey: ["editProjectRequest", projectId],
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+  });
+};
+
+export const useDeleteProjectMutation = (projectId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteProjectRequest(projectId),
+    mutationKey: ["deleteProjectRequest", projectId],
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
   });

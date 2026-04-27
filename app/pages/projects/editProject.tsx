@@ -47,6 +47,8 @@ import { useEditProjectMutation } from "~/services/projects/queries";
 import type { ProjectInfo } from "~/services/projects/types";
 import { PROJECT_STATUS_MAP } from "~/services/projects/utils";
 import { is } from "date-fns/locale";
+import { containerVariants } from "~/motionVariants";
+import { motion } from "framer-motion";
 
 const projectSchema = z.object({
   name: z.string().min(1, "Project name is required").optional(),
@@ -108,6 +110,14 @@ const AddProject = () => {
 
   const onSubmit = (data: z.infer<typeof projectSchema>) => {
     const payload: Record<string, any> = {};
+    const dirtyFields = form.formState.dirtyFields;
+
+    console.log("Dirty Fields:", dirtyFields);
+
+    if (Object.keys(dirtyFields).length === 0) {
+      toast.error("No changes made to update.");
+      return;
+    }
 
     for (const key in form.formState.dirtyFields) {
       const value = data[key as keyof z.infer<typeof projectSchema>];
@@ -141,51 +151,56 @@ const AddProject = () => {
         />
       </div>
 
-      <main className="max-w-300 mx-auto p-6 ">
+      <motion.main className="max-w-300 mx-auto p-6 " variants={containerVariants}>
         <Form {...form}>
-          <form
+          <motion.form
             className="grid grid-cols-1 md:grid-cols-12 gap-8"
             onSubmit={form.handleSubmit(onSubmit)}
+            variants={containerVariants}
           >
             <div className="md:col-span-7 space-y-8">
               <section className="space-y-6">
                 <div className="grid gap-6">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter project name..."
-                            {...field}
-                            className="border-0 border-b border-zinc-200 rounded-none px-0 h-12 text-2xl font-medium focus-visible:ring-0 focus-visible:border-primary transition-colors placeholder:text-zinc-400 shadow-none bg-transparent"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <motion.div variants={containerVariants}>
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter project name..."
+                              {...field}
+                              className="border-0 border-b border-zinc-200 rounded-none px-0 h-12 text-2xl font-medium focus-visible:ring-0 focus-visible:border-primary transition-colors placeholder:text-zinc-400 shadow-none bg-transparent"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
 
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-sm font-bold uppercase tracking-widest text-zinc-600">
-                          Description
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Detailed description of the project."
-                            className="min-h-30 placeholder:text-zinc-400 s"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <motion.div variants={containerVariants}>
+                    <FormField
+                      control={form.control}
+                      name="description"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-bold uppercase tracking-widest text-zinc-600">
+                            Description
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea
+                              placeholder="Detailed description of the project."
+                              className="min-h-30 placeholder:text-zinc-400 s"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
                 </div>
               </section>
             </div>
@@ -287,14 +302,12 @@ const AddProject = () => {
               {isEditingProject ? (
                 <Spinner />
               ) : (
-                <div className="flex items-center ">
-                  <Add className="text-white" /> Add Project{" "}
-                </div>
+                <div className="flex items-center ">Edit Project</div>
               )}
             </Button>
-          </form>
+          </motion.form>
         </Form>
-      </main>
+      </motion.main>
     </div>
   );
 };
