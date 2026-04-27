@@ -58,7 +58,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />;
-      <Toaster />
+      <Toaster position="top-right" />
     </QueryClientProvider>
   );
 }

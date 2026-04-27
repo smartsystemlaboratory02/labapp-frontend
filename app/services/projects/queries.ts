@@ -4,7 +4,12 @@ import {
   useQueryClient,
   keepPreviousData,
 } from "@tanstack/react-query";
-import { createProjectRequest, getProjectsRequest } from "./requests";
+import {
+  createProjectRequest,
+  editProjectRequest,
+  getProjectsRequest,
+} from "./requests";
+import type { ProjectInfo } from "./types";
 
 export const useGetProjects = () => {
   return useQuery({
@@ -21,6 +26,18 @@ export const useCreateProjectMutation = () => {
   return useMutation({
     mutationFn: createProjectRequest,
     mutationKey: ["createProjectRequest"],
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+  });
+};
+
+export const useEditProjectMutation = (projectId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: Partial<ProjectInfo>) =>
+      editProjectRequest(projectId, data),
+    mutationKey: ["editProjectRequest", projectId],
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
   });

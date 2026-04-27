@@ -35,12 +35,10 @@ export interface ProjectInfo {
   id: string;
   title: string;
   description: string;
-  status: string;
+  status: "completed" | "in_progress" | "cancelled";
   deadline: string;
-
   objectives: ProjectInfoObjective[];
-
-  created_by: string | null;
-
   members: ProjectInfoMember[];
+  created_by: string | null;
+  created_at: string;
 }
