@@ -1,18 +1,12 @@
 "use client";
 
 import {
-  ArrowLeft2,
   DocumentCloud,
-  Link1,
   UserTick,
   Calendar,
-  Direct,
   MessageText,
   DocumentText,
-  Add,
-  Setting2,
   Brodcast,
-  Trash,
 } from "iconsax-reactjs";
 
 import { Button } from "~/components/ui/button";
@@ -21,7 +15,6 @@ import PageHeader from "~/components/ui/PageHeader";
 import { Link, useLocation, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import SectionHeader from "~/components/ui/SectionHeader";
-import ProjectObj from "./components/ProjectObj";
 import ResourceLink from "./components/ResourceLink";
 import { TeamLead, TeamMember } from "./components/ProjectPersonnel";
 import { containerVariants, itemVariants } from "~/motionVariants";
@@ -33,48 +26,15 @@ import type { ProjectInfo } from "~/services/projects/types";
 import { format } from "date-fns";
 import { PROJECT_STATUS_MAP } from "~/services/projects/utils";
 import { cn } from "~/lib/utils";
-import { Delete, Edit } from "lucide-react";
+import { Edit } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { DeleteProjectModal } from "./components/DeleteProjectModal";
-
-// const PROJECT_MOCK = {
-//   id: "LAB-PRJ-2026-X4",
-//   name: "Neural Mapping Protocol",
-//   status: "active",
-//   description:
-//     "A comprehensive initiative focused on mapping synaptic responses to low-latency external stimuli. This phase involves hardware-software synchronization and initial safety protocols within the controlled lab environment. A comprehensive initiative focused on mapping synaptic responses to low-latency external stimuli. This phase involves hardware-software synchronization and initial safety protocols within the controlled lab environment.A comprehensive initiative focused on mapping synaptic responses to low-latency external stimuli. This phase involves hardware-software synchronization and initial safety protocols within the controlled lab environment.",
-//   createdBy: "Admin. Arinze",
-//   createdAt: "Feb 12, 2026",
-//   deadline: "Oct 24, 2026",
-//   objectives: [
-//     "Initial Synaptic Calibration and Baseline Setup",
-//     "Latency Stress Testing via External Stimuli",
-//     "Safety Protocol Documentation and Compliance Review",
-//     "Hardware-Software Synchronization Check",
-//     "Initial Synaptic Calibration and Baseline Setup",
-//     "Latency Stress Testing via External Stimuli",
-//   ],
-//   leads: [{ name: "Dr. Sarah Chen" }, { name: "Ibrahim Sule" }],
-//   team: [
-//     { name: "Samuel Okon" },
-//     { name: "Elena Rodriguez" },
-//     { name: "James Watt" },
-//   ],
-//   submissions: {
-//     docs: [
-//       { filename: "safety_protocols_v1.pdf" },
-//       { filename: "hardware_specs_rev4.docx" },
-//     ],
-//     links: [
-//       { title: "Lab Monitor Dashboard", url: "#" },
-//       { title: "Version Control Repository", url: "#" },
-//     ],
-//   },
-// };
+import ProjectObjectives from "./components/ProjectObjectives";
+import ProjectTeamMembers from "./components/ProjectTeamMembers";
 
 export default function ProjectDetails() {
   const navigate = useNavigate();
@@ -196,43 +156,23 @@ export default function ProjectDetails() {
             </div>
           </motion.section>
 
-          <motion.section className="space-y-4" variants={itemVariants}>
-            <SectionHeader
-              icon={<Direct size="18" variant="Bold" />}
-              label="Project Objectives"
-            />
-            <div className="grid gap-3">
-              {project.objectives.map((objective, index) => (
-                <ProjectObj
-                  key={objective.id}
-                  objective={objective}
-                  index={index}
-                />
-              ))}
-            </div>
-          </motion.section>
+          <ProjectObjectives
+            projectId={project.id}
+            objectives={project.objectives}
+          />
         </div>
 
         <motion.div className="col-span-12 lg:col-span-4 space-y-10">
-          <motion.section className="space-y-5" variants={itemVariants}>
-            <SectionHeader
-              icon={<UserTick size="18" variant="Bold" />}
-              label="Team Members"
-            />
-            <div className="space-y-2">
-              {project.members.map((member, i) => {
-                if (member.role === "lead")
-                  return <TeamLead key={member.id} lead={member} />;
-                return <TeamMember key={member.id} member={member} />;
-              })}
-            </div>
-          </motion.section>
+          <ProjectTeamMembers
+            projectId={project.id}
+            members={project.members}
+          />
 
           <motion.section className="space-y-5" variants={itemVariants}>
             <div className="flex items-center justify-between">
               <SectionHeader
                 icon={<DocumentCloud size="18" variant="Bold" />}
-                label="Projecct Submissions"
+                label="Project Submissions"
               />
               <SubmissionModal />
             </div>

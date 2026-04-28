@@ -5,6 +5,8 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import {
+  addProjectMemberRequest,
+  addProjectObjectiveRequest,
   createProjectRequest,
   deleteProjectRequest,
   editProjectRequest,
@@ -52,5 +54,31 @@ export const useDeleteProjectMutation = (projectId: string) => {
     mutationKey: ["deleteProjectRequest", projectId],
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+  });
+};
+
+export const useAddProjectObjectiveMutation = (projectId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (objective: string) =>
+      addProjectObjectiveRequest(projectId, objective),
+    mutationKey: ["addProjectObjectiveRequest", projectId],
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+    // TODO: Invalidate specific project query instead of all projects
+  });
+};
+
+export const useAddProjectMemberMutation = (projectId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ member, role }: { member: string; role: string }) =>
+      addProjectMemberRequest(projectId, member, role),
+    mutationKey: ["addProjectMemberRequest", projectId],
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+    // TODO: Invalidate specific project query instead of all projects
   });
 };

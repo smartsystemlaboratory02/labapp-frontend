@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +11,7 @@ import {
   DialogClose,
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
-import { MessageAdd, Edit, CloseCircle, Trash } from "iconsax-reactjs";
+import { Trash } from "iconsax-reactjs";
 import {
   Tooltip,
   TooltipContent,

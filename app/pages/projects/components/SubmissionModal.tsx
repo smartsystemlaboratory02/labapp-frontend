@@ -28,7 +28,7 @@ export function SubmissionModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="p-1.5 text-secondary bg-secondary/10 rounded-lg hover:scale-110 transition-transform active:scale-95">
+        <button className="p-1.5 text-secondary bg-secondary/10 rounded-lg hover:scale-110 transition-transform active:scale-95 animate-pulse">
           <Add size="20" variant="Bold" />
         </button>
       </DialogTrigger>
