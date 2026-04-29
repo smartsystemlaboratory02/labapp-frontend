@@ -14,7 +14,7 @@ const ProjectDetailsSkeleton = () => {
       </div>
 
       {/* TOP BAR */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-100 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-zinc-200 pb-4">
         <Skeleton className="h-6 w-24 rounded-md" />
 
         <div className="flex gap-3">
@@ -33,7 +33,7 @@ const ProjectDetailsSkeleton = () => {
           <div className="space-y-4">
             <Skeleton className="h-4 w-40" />
 
-            <div className="bg-zinc-50/50 border border-zinc-200 p-4 rounded-[2rem] space-y-3">
+            <div className="bg-zinc-100/50 border border-zinc-200 p-4 rounded-[2rem] space-y-3">
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-[90%]" />
               <Skeleton className="h-4 w-[80%]" />
@@ -59,7 +59,7 @@ const ProjectDetailsSkeleton = () => {
               {Array.from({ length: 3 }).map((_, i) => (
                 <div
                   key={i}
-                  className="flex items-start gap-4 p-5 bg-white border border-zinc-100 rounded-3xl"
+                  className="flex items-start gap-4 p-5 bg-white border border-zinc-200 rounded-3xl"
                 >
                   <Skeleton className="size-8 rounded-xl" />
                   <div className="flex-1 space-y-2">
@@ -82,7 +82,7 @@ const ProjectDetailsSkeleton = () => {
               {Array.from({ length: 3 }).map((_, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-4 rounded-2xl border border-zinc-100"
+                  className="flex items-center justify-between p-4 rounded-2xl border border-zinc-200"
                 >
                   <div className="flex items-center gap-3">
                     <Skeleton className="h-8 w-8 rounded-full" />

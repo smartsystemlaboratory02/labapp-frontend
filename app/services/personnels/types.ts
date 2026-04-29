@@ -9,6 +9,7 @@ export interface PersonnelInfo {
   bio: string
   phone_number: string
   profile_img: string | null
+  colour: string
 }
 
 export interface Personnel {

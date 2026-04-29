@@ -45,14 +45,6 @@ export default function ProjectDetails() {
   } = useGetProjectQuery(projectId, stateProject);
 
   useEffect(() => {
-    if (!project) {
-      toast.error("Something went wrong. Please try again.");
-
-      setTimeout(() => {
-        navigate("/projects");
-      }, 2000);
-    }
-
     if (isError) {
       toast.error(
         error.message || "Failed to load project details. Please try again.",
