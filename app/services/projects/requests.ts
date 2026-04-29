@@ -83,3 +83,13 @@ export const updateProjectAnnouncementRequest = (
 
 export const deleteProjectAnnouncementRequest = (announcementId: string) =>
   makeRequest(`/projects/announcements/${announcementId}`, "DELETE");
+
+export const addProjectResourceLinkRequest = (
+  projectId: string,
+  title: string,
+  url: string,
+) => makeRequest(`/projects/resource-link`, "POST", {
+  project_id: projectId,
+  title,
+  resource_link: url,
+});

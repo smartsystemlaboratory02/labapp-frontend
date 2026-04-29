@@ -7,6 +7,7 @@ import {
 import {
   addProjectMemberRequest,
   addProjectObjectiveRequest,
+  addProjectResourceLinkRequest,
   createProjectAnnouncementRequest,
   createProjectRequest,
   deleteProjectAnnouncementRequest,
@@ -224,6 +225,18 @@ export const useDeleteProjectAnnouncementMutation = (
       queryClient.invalidateQueries({
         queryKey: ["getProjectAnnouncements", projectId],
       });
+    },
+  });
+};
+
+export const useAddProjectResourceLinkMutation = (projectId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ title, url }: { title: string; url: string }) =>
+      addProjectResourceLinkRequest(projectId, title, url),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getProject", projectId] });
     },
   });
 };

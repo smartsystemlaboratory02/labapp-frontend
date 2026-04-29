@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  DocumentCloud,
-  UserTick,
-  Calendar,
-  MessageText,
-  DocumentText,
-  Brodcast,
-} from "iconsax-reactjs";
+import { Calendar, MessageText, DocumentText, Brodcast } from "iconsax-reactjs";
 
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
@@ -15,11 +8,8 @@ import PageHeader from "~/components/ui/PageHeader";
 import { Link, useLocation, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import SectionHeader from "~/components/ui/SectionHeader";
-import ResourceLink from "./components/ResourceLink";
-import { TeamMember } from "./components/members/TeamMember";
 import { containerVariants, itemVariants } from "~/motionVariants";
 import BackButton from "~/components/ui/BackButton";
-import { SubmissionModal } from "./components/SubmissionModal";
 import { toast } from "sonner";
 import { useEffect } from "react";
 import type { ProjectInfo } from "~/services/projects/types";
@@ -38,6 +28,7 @@ import ProjectTeamMembers from "./components/members/ProjectTeamMembers";
 import { useParams } from "react-router";
 import { useGetProjectQuery } from "~/services/projects/queries";
 import ProjectDetailsSkeleton from "./components/ProjectDetailsSkeleton";
+import Resources from "./components/resources/Resources";
 
 export default function ProjectDetails() {
   const navigate = useNavigate();
@@ -134,11 +125,16 @@ export default function ProjectDetails() {
 
           <DeleteProjectModal projectId={project.id} />
 
-          <Link to={`/projects/${project.id}/feedback`} className="ml-auto">
-            <Button variant="outline" className="flex items-center ml-0">
-              <MessageText size="18" className="mr-2" /> Feedback
-            </Button>
-          </Link>
+          {/* <Link to={`/projects/${project.id}/feedback`} className="ml-auto"> */}
+          <Button
+            variant="outline"
+            className="flex items-center ml-0"
+            onClick={() => toast.info("Coming soon")}
+          >
+            <MessageText size="18" className="mr-2" /> Feedback
+          </Button>
+          {/* </Link> */}
+
           <Link
             to={`/projects/${project.id}/announcements`}
             className="ml-auto"
@@ -198,34 +194,7 @@ export default function ProjectDetails() {
             members={project.members}
           />
 
-          <motion.section className="space-y-5" variants={itemVariants}>
-            <div className="flex items-center justify-between">
-              <SectionHeader
-                icon={<DocumentCloud size="18" variant="Bold" />}
-                label="Project Submissions"
-              />
-              <SubmissionModal />
-            </div>
-
-            {/* <div className="grid gap-2">
-              {PROJECT_MOCK.submissions.docs.map((doc, i) => (
-                <ResourceLink
-                  key={i}
-                  title={doc.filename}
-                  icon={<DocumentText size="18" />}
-                  type="doc"
-                />
-              ))}
-              {PROJECT_MOCK.submissions.links.map((link, i) => (
-                <ResourceLink
-                  key={i}
-                  title={link.title}
-                  icon={<Link1 size="18" />}
-                  type="link"
-                />
-              ))}
-            </div> */}
-          </motion.section>
+          {/* <Resources projectId={project.id} /> */}
         </motion.div>
       </motion.div>
     </div>
