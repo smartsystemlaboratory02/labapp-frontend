@@ -1,17 +1,18 @@
-import { ArrowRight } from "iconsax-reactjs";
+import { ArrowRight, Document, Link1 } from "iconsax-reactjs";
 import React from "react";
+import { Link } from "react-router";
 import { cn } from "~/lib/utils";
 
 const ResourceLink = ({
   title,
-  icon,
   type,
+  url
 }: {
   title: string;
-  icon: React.ReactNode;
   type: "doc" | "link";
+  url: string;
 }) => (
-  <button className="flex items-center justify-between p-4 bg-white border border-zinc-100 rounded-2xl hover:border-zinc-300 group transition-all text-left">
+  <Link to={url} target="_blank" className="flex items-center justify-between p-4 bg-white border border-zinc-100 rounded-2xl hover:border-zinc-300 group transition-all text-left">
     <div className="flex items-center gap-3 overflow-hidden">
       <span
         className={cn(
@@ -19,7 +20,7 @@ const ResourceLink = ({
           type === "doc" ? "text-secondary" : "text-primary",
         )}
       >
-        {icon}
+        {type === "link" ? <Link1 size="18" /> : <Document size="18" />}
       </span>
       <span className="text-xs font-bold text-zinc-600 truncate">{title}</span>
     </div>
@@ -27,7 +28,7 @@ const ResourceLink = ({
       size="14"
       className="text-zinc-300 group-hover:text-zinc-900 group-hover:translate-x-1 transition-all"
     />
-  </button>
+  </Link>
 );
 
 export default ResourceLink;

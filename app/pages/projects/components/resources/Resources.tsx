@@ -3,15 +3,16 @@ import { DocumentCloud } from "iconsax-reactjs";
 import AddResourceModal from "./AddResourceModal";
 import SectionHeader from "~/components/ui/SectionHeader";
 import { motion } from "framer-motion";
+import type { ProjectResourceLink } from "~/services/projects/types";
+import ResourceLink from "./ResourceLink";
 
 const Resources = ({
   projectId,
   resources,
 }: {
   projectId: string;
-  resources: any;
+  resources: ProjectResourceLink[];
 }) => {
-  //TODO: CHhange to resource type
   return (
     <motion.section className="space-y-5" variants={itemVariants}>
       <div className="flex items-center justify-between">
@@ -22,24 +23,16 @@ const Resources = ({
         <AddResourceModal projectId={projectId} />
       </div>
 
-      {/* <div className="grid gap-2">
-              {PROJECT_MOCK.submissions.docs.map((doc, i) => (
-                <ResourceLink
-                  key={i}
-                  title={doc.filename}
-                  icon={<DocumentText size="18" />}
-                  type="doc"
-                />
-              ))}
-              {PROJECT_MOCK.submissions.links.map((link, i) => (
-                <ResourceLink
-                  key={i}
-                  title={link.title}
-                  icon={<Link1 size="18" />}
-                  type="link"
-                />
-              ))}
-            </div> */}
+      <div className="grid gap-2">
+        {resources.map((resource, i) => (
+          <ResourceLink
+            key={i}
+            title={resource.title}
+            type={resource.type}
+            url={resource.resource_link}
+          />
+        ))}
+      </div>
     </motion.section>
   );
 };

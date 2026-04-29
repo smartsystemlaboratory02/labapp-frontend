@@ -194,7 +194,7 @@ export default function ProjectDetails() {
             members={project.members}
           />
 
-          {/* <Resources projectId={project.id} /> */}
+          <Resources projectId={project.id} resources={project.resources} />
         </motion.div>
       </motion.div>
     </div>

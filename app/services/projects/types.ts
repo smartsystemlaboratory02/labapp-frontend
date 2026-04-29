@@ -51,17 +51,27 @@ export interface ProjectInfo {
     last_name: string;
   };
   created_at: string;
+  resources: ProjectResourceLink[];
 }
 
 export interface ProjectAnnouncement {
-  project_id: string
-  title: string
-  created_at: string
+  project_id: string;
+  title: string;
+  created_at: string;
   updated_at: string;
   id: string;
   content: string;
   created_by: {
     first_name: string;
     last_name: string;
-  }
-} 
+  };
+}
+
+export interface ProjectResourceLink {
+  id: string;
+  title: string;
+  resource_link: string;
+  created_at: string;
+  updated_at: string;
+  type: "link" | "doc";
+}

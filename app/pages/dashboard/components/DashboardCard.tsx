@@ -22,7 +22,7 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   className,
 }) => {
   return (
-    <motion.div variants={itemVariants} className={cn(className)}>
+    <motion.div variants={itemVariants} className={cn(className, "relative overflow-hidden")}>
       <Card className="border-zinc-200/50  bg-white/50 shadow-sm hover:shadow-md transition-all duration-300 rounded-[2rem] overflow-hidden">
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
           <div className="flex items-center gap-2">
