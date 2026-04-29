@@ -155,6 +155,7 @@ const UpdateMemberRoleForm = ({
             variant="outline"
             className="px-12 ml-0"
             onClick={() => setOpen(false)}
+            type="button"
           >
             Cancel
           </Button>

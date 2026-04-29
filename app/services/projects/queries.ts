@@ -9,6 +9,7 @@ import {
   addProjectObjectiveRequest,
   createProjectAnnouncementRequest,
   createProjectRequest,
+  deleteProjectAnnouncementRequest,
   deleteProjectMemberRequest,
   deleteProjectObjectiveRequest,
   deleteProjectRequest,
@@ -17,6 +18,7 @@ import {
   getProjectAnnouncementsRequest,
   getProjectRequest,
   getProjectsRequest,
+  updateProjectAnnouncementRequest,
   updateProjectMemberRoleRequest,
 } from "./requests";
 import type { ProjectInfo } from "./types";
@@ -185,6 +187,39 @@ export const useCreateProjectAnnouncementMutation = (projectId: string) => {
   return useMutation({
     mutationFn: ({ title, content }: { title: string; content: string }) =>
       createProjectAnnouncementRequest(projectId, title, content),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getProjectAnnouncements", projectId],
+      });
+    },
+  });
+};
+
+export const useUpdateProjectAnnouncementMutation = (
+  projectId: string,
+  announcementId: string,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: { title?: string; content?: string }) =>
+      updateProjectAnnouncementRequest(announcementId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getProjectAnnouncements", projectId],
+      });
+    },
+  });
+};
+
+export const useDeleteProjectAnnouncementMutation = (
+  projectId: string,
+  announcementId: string,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteProjectAnnouncementRequest(announcementId),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["getProjectAnnouncements", projectId],

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   NotificationStatus,
   UserTick,
@@ -47,6 +47,8 @@ const announcementSchema = z.object({
 export default function ProjectAnnouncements() {
   const params = useParams<{ id: string }>();
   const projectId = params.id || "";
+
+  const [isEditing, setIsEditing] = useState(false);
 
   const form = useForm<z.infer<typeof announcementSchema>>({
     resolver: zodResolver(announcementSchema),
@@ -216,6 +218,7 @@ export default function ProjectAnnouncements() {
             ) : (
               announcements.map((announcement) => (
                 <AnnouncementCard
+                  projectId={projectId}
                   announcement={announcement}
                   key={announcement.id}
                 />

@@ -4,13 +4,18 @@ import { Clock, Edit, Trash } from "iconsax-reactjs";
 import { cn } from "~/lib/utils";
 import { itemVariants } from "~/motionVariants";
 import type { ProjectAnnouncement } from "~/services/projects/types";
+import { UpdateAnnouncementModal } from "./UpdateAnnouncementModal";
+import { DeleteAnnouncementModal } from "./DeleteAnnouncement";
 
 const AnnouncementCard = ({
+  projectId,
   announcement,
 }: {
+  projectId: string;
   announcement: ProjectAnnouncement;
 }) => {
   const target = "all";
+
   return (
     <motion.div
       className="p-6 bg-white border border-zinc-100 rounded-[2rem] hover:border-primary/20 transition-all group shadow-sm"
@@ -52,25 +57,15 @@ const AnnouncementCard = ({
           {announcement.created_by.last_name}
         </p>
         <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all shrink-0">
-          <button
-            type="button"
-            // onClick={() => setIsEditing(true)}
-            className="p-2 rounded-xl border border-zinc-200 hover:bg-zinc-50 transition"
-          >
-            <Edit size={16} />
-          </button>
-
-          <button
-            type="button"
-            className="p-2 rounded-xl border border-destructive text-destructive hover:bg-red-50 transition"
-          >
-            <Trash size={16} />
-          </button>
-
-          {/* <DeleteObjectiveModal
+          <UpdateAnnouncementModal
             projectId={projectId}
-            objectiveId={objective.id}
-          /> */}
+            announcement={announcement}
+          />
+
+          <DeleteAnnouncementModal
+            projectId={projectId}
+            announcementId={announcement.id}
+          />
         </div>
       </div>
     </motion.div>

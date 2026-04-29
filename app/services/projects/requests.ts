@@ -75,3 +75,11 @@ export const createProjectAnnouncementRequest = (
     title,
     content,
   });
+
+export const updateProjectAnnouncementRequest = (
+  announcementId: string,
+  data: { title?: string; content?: string },
+) => makeRequest(`/projects/announcements/${announcementId}`, "PUT", data);
+
+export const deleteProjectAnnouncementRequest = (announcementId: string) =>
+  makeRequest(`/projects/announcements/${announcementId}`, "DELETE");
