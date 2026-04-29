@@ -20,7 +20,7 @@ import BackButton from "~/components/ui/BackButton";
 import PageHeader from "~/components/ui/PageHeader";
 import { motion } from "framer-motion";
 import { containerVariants, itemVariants } from "~/motionVariants";
-import BroadcastCard from "./components/BroadcastCard";
+import BroadcastCard from "./components/broadcast.tsx/BroadcastCard";
 
 const MOCK_BROADCASTS = [
   {
@@ -42,7 +42,6 @@ const MOCK_BROADCASTS = [
 ];
 
 export default function ProjectBroadcasts() {
-  const projectName = "Neural Mapping Protocol";
 
   return (
     <div className="p-6 lg:p-10 max-w-400 mx-auto space-y-8 selection:bg-primary/10">

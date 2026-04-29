@@ -15,20 +15,21 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  // DrawerDescription,
   DrawerFooter,
   DrawerHeader,
-  // DrawerTitle,
   DrawerTrigger,
 } from "~/components/ui/drawer";
+import type { Icon } from "iconsax-reactjs";
+import { BusIcon, X } from "lucide-react";
 
 interface ActionModalProps {
   trigger: React.ReactNode;
   title: string;
-  description: string;
+  description?: string;
   children: (
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
   ) => React.ReactNode;
+  Icon: Icon;
 }
 
 const ActionModal: React.FC<ActionModalProps> = ({
@@ -36,19 +37,24 @@ const ActionModal: React.FC<ActionModalProps> = ({
   title,
   children,
   description,
+  Icon,
 }) => {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
-  // Shared Header Logic to ensure consistency
   const HeaderContent = () => (
     <div className="flex flex-col gap-2">
-      <DialogTitle className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+      <div className="size-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+        <Icon size="24" variant="Bold" />
+      </div>
+      <DialogTitle className="text-2xl font-black uppercase tracking-tighter">
         {title}
       </DialogTitle>
-      <DialogDescription className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-        {description}
-      </DialogDescription>
+      {description && (
+        <DialogDescription className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
+          {description}
+        </DialogDescription>
+      )}
     </div>
   );
 
@@ -57,39 +63,22 @@ const ActionModal: React.FC<ActionModalProps> = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogContent
-          className="sm:max-w-[550px] p-0 border-none bg-transparent shadow-none overflow-visible"
+          className="sm:max-w-137.5 border-none  overflow-visible rounded-[2rem] p-8 shadow-2xl"
           showCloseButton={false}
         >
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.2)] rounded-[2.5rem] overflow-hidden"
+          <button
+            onClick={() => setOpen(false)}
+            className="absolute top-6 right-6 p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 text-zinc-400 transition-colors"
           >
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-400 transition-colors"
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-            <div className="p-10">
-              <DialogHeader className="mb-8">
-                <HeaderContent />
-              </DialogHeader>
-              <div className="relative">{children(setOpen)}</div>
-            </div>
-          </motion.div>
+            <X size="20" />
+          </button>
+
+          <div className="">
+            <DialogHeader className="mb-8">
+              <HeaderContent />
+            </DialogHeader>
+            <div className="relative">{children(setOpen)}</div>
+          </div>
         </DialogContent>
       </Dialog>
     );
@@ -98,8 +87,8 @@ const ActionModal: React.FC<ActionModalProps> = ({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-      <DrawerContent className="bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 rounded-t-[2.5rem]">
-        <div className="mx-auto w-12 h-1.5 flex-shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-800 my-4" />
+      <DrawerContent className="sm:max-w-137.5 border-none bg-transparent overflow-visible rounded-[2rem] p-8 shadow-2xl">
+        <div className="mx-auto w-12 h-1.5 shrink-0 rounded-full bg-zinc-200 dark:bg-zinc-800 my-4" />
         <DrawerHeader className="text-left px-6">
           <HeaderContent />
         </DrawerHeader>

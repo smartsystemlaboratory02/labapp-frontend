@@ -16,7 +16,7 @@ import { Link, useLocation, useNavigate } from "react-router";
 import { motion } from "framer-motion";
 import SectionHeader from "~/components/ui/SectionHeader";
 import ResourceLink from "./components/ResourceLink";
-import { TeamLead, TeamMember } from "./components/ProjectPersonnel";
+import { TeamMember } from "./components/members/TeamMember";
 import { containerVariants, itemVariants } from "~/motionVariants";
 import BackButton from "~/components/ui/BackButton";
 import { SubmissionModal } from "./components/SubmissionModal";
@@ -33,8 +33,8 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { DeleteProjectModal } from "./components/DeleteProjectModal";
-import ProjectObjectives from "./components/ProjectObjectives";
-import ProjectTeamMembers from "./components/ProjectTeamMembers";
+import ProjectObjectives from "./components/objectives/ProjectObjectives";
+import ProjectTeamMembers from "./components/members/ProjectTeamMembers";
 
 export default function ProjectDetails() {
   const navigate = useNavigate();

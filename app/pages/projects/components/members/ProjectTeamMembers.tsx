@@ -1,16 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
-import { Add, Minus, People } from "iconsax-reactjs";
 import { UserTick } from "iconsax-reactjs";
 
 import SectionHeader from "~/components/ui/SectionHeader";
-import { TeamLead, TeamMember } from "./ProjectPersonnel";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+import { TeamMember } from "./TeamMember";
 import { itemVariants } from "~/motionVariants";
-import type { Project, ProjectInfoMember } from "~/services/projects/types";
+import type { ProjectInfoMember } from "~/services/projects/types";
 import { motion } from "framer-motion";
 import { AddProjectMemberModal } from "./AddProjectMemberModal";
 
@@ -33,10 +28,9 @@ const ProjectTeamMembers = ({
 
       <div className="space-y-2">
         {members.map((member) => {
-          if (member.role === "lead") {
-            return <TeamLead key={member.id} lead={member} />;
-          }
-          return <TeamMember key={member.id} member={member} />;
+          return (
+            <TeamMember key={member.id} member={member} projectId={projectId} />
+          );
         })}
       </div>
     </motion.section>

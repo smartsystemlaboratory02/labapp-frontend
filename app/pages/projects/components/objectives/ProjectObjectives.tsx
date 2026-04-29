@@ -80,6 +80,7 @@ const ProjectObjectives = ({
           <div className="grid gap-3">
             {objectives.map((objective, index) => (
               <ProjectObj
+                projectId={projectId}
                 key={objective.id}
                 objective={objective}
                 index={index}
@@ -127,6 +128,7 @@ const ProjectObjectives = ({
           size="sm"
           onClick={() => setIsAddingObjectiveState((prev) => !prev)}
           className="h-8 w-12 rounded-full border-dashed border-zinc-300 bg-primary text-white hover flex items-center"
+          disabled={isAddingObjective}
         >
           {isAddingObjectiveState ? <Minus size={20} /> : <Add size={20} />}
         </Button>

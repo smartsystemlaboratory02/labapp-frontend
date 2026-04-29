@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
 import { Add, FolderCloud, TickCircle, Timer1 } from "iconsax-reactjs";
 import { Link, useNavigate } from "react-router";
-import { MOCK_PROJECTS } from "~/dashboardDemo";
 import { containerVariants, itemVariants } from "~/motionVariants";
 import StatCard from "./components/StatCard";
 import ProjectCard from "./components/ProjectCard";
-import { useGetProjects } from "~/services/projects/queries";
+import { useGetProjectsQuery } from "~/services/projects/queries";
 import { useEffect, useMemo } from "react";
 import { toast } from "sonner";
 import BentoSkeleton from "~/components/ui/BentoSkeleton";
@@ -19,7 +18,7 @@ const Projects = () => {
     isFetching: isFetchingProjects,
     isError: isFetchingProjectsError,
     error: projectsError,
-  } = useGetProjects();
+  } = useGetProjectsQuery();
 
   const stats = useMemo(() => {
     return {

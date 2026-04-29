@@ -7,6 +7,9 @@ export const createProjectRequest = (data: Project) =>
 export const getProjectsRequest = () =>
   makeRequest<ProjectInfo[]>(`/projects/`, "GET");
 
+export const getProjectRequest = (projectId: string) =>
+  makeRequest<ProjectInfo>(`/projects/${projectId}`, "GET");
+
 export const editProjectRequest = (
   projectId: string,
   data: Partial<ProjectInfo>,
@@ -39,3 +42,19 @@ export const addProjectMemberRequest = (
     user_id: member,
     role,
   });
+
+export const editProjectObjectiveRequest = (
+  objectiveId: string,
+  objective: string,
+) => makeRequest(`/projects/objectives/${objectiveId}`, "PUT", { objective });
+
+export const deleteProjectObjectiveRequest = (objectiveId: string) =>
+  makeRequest(`/projects/objectives/${objectiveId}`, "DELETE");
+
+export const updateProjectMemberRoleRequest = (
+  memberId: string,
+  role: "lead" | "intern",
+) => makeRequest(`/projects/members/${memberId}`, "PUT", { role });
+
+export const deleteProjectMemberRequest = (memberId: string) =>
+  makeRequest(`/projects/members/${memberId}`, "DELETE");

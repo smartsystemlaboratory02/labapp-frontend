@@ -11,8 +11,7 @@ import {
   DialogClose,
 } from "~/components/ui/dialog";
 import { Button } from "~/components/ui/button";
-import { Textarea } from "~/components/ui/textarea";
-import { MessageAdd, Edit, CloseCircle, People, Add } from "iconsax-reactjs";
+import { Edit, People, Add } from "iconsax-reactjs";
 
 import {
   Form,

@@ -8,18 +8,32 @@ import {
   addProjectMemberRequest,
   addProjectObjectiveRequest,
   createProjectRequest,
+  deleteProjectMemberRequest,
+  deleteProjectObjectiveRequest,
   deleteProjectRequest,
+  editProjectObjectiveRequest,
   editProjectRequest,
+  getProjectRequest,
   getProjectsRequest,
+  updateProjectMemberRoleRequest,
 } from "./requests";
 import type { ProjectInfo } from "./types";
 
-export const useGetProjects = () => {
+export const useGetProjectsQuery = () => {
   return useQuery({
     queryKey: ["getProjects"],
     queryFn: getProjectsRequest,
     placeholderData: keepPreviousData,
     staleTime: 600000,
+  });
+};
+
+export const useGetProjectQuery = (projectId: string) => {
+  return useQuery({
+    queryKey: ["getProject", projectId],
+    queryFn: () => getProjectRequest(projectId),
+    placeholderData: keepPreviousData,
+    staleTime: 300000,
   });
 };
 
@@ -41,8 +55,10 @@ export const useEditProjectMutation = (projectId: string) => {
     mutationFn: (data: Partial<ProjectInfo>) =>
       editProjectRequest(projectId, data),
     mutationKey: ["editProjectRequest", projectId],
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+        queryClient.invalidateQueries({ queryKey: ["getProject", projectId] }));
+    },
   });
 };
 
@@ -64,9 +80,10 @@ export const useAddProjectObjectiveMutation = (projectId: string) => {
     mutationFn: (objective: string) =>
       addProjectObjectiveRequest(projectId, objective),
     mutationKey: ["addProjectObjectiveRequest", projectId],
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
-    // TODO: Invalidate specific project query instead of all projects
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+        queryClient.invalidateQueries({ queryKey: ["getProject", projectId] }));
+    },
   });
 };
 
@@ -77,8 +94,74 @@ export const useAddProjectMemberMutation = (projectId: string) => {
     mutationFn: ({ member, role }: { member: string; role: string }) =>
       addProjectMemberRequest(projectId, member, role),
     mutationKey: ["addProjectMemberRequest", projectId],
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
-    // TODO: Invalidate specific project query instead of all projects
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+        queryClient.invalidateQueries({ queryKey: ["getProject", projectId] }));
+    },
+  });
+};
+
+export const useEditProjectObjectiveMutation = (
+  projectId: string,
+  objectiveId: string,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ objective }: { objective: string }) =>
+      editProjectObjectiveRequest(objectiveId, objective),
+    mutationKey: ["editProjectObjectiveRequest", objectiveId],
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+        queryClient.invalidateQueries({ queryKey: ["getProject", projectId] }));
+    },
+  });
+};
+
+export const useDeleteProjectObjectiveMutation = (
+  projectId: string,
+  objectiveId: string,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteProjectObjectiveRequest(objectiveId),
+    mutationKey: ["deleteProjectObjectiveRequest", objectiveId],
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+        queryClient.invalidateQueries({ queryKey: ["getProject", projectId] }));
+    },
+  });
+};
+
+export const useUpdateProjectMemberRoleMutation = (
+  projectId: string,
+  memberId: string,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ role }: { role: "lead" | "intern" }) =>
+      updateProjectMemberRoleRequest(memberId, role),
+
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+        queryClient.invalidateQueries({ queryKey: ["getProject", projectId] }));
+    },
+  });
+};
+
+export const useDeleteProjectMemberMutation = (
+  projectId: string,
+  memberId: string,
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteProjectMemberRequest(memberId),
+    onSuccess: () => {
+      (queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
+        queryClient.invalidateQueries({ queryKey: ["getProject", projectId] }));
+    },
   });
 };
