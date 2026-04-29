@@ -22,7 +22,7 @@ export default [
     route("projects/:id", "./pages/projects/projectDetails.tsx"),
     route("projects/:id/edit", "./pages/projects/editProject.tsx"),
     route("projects/:id/feedback", "./pages/projects/feedback.tsx"),
-    route("projects/:id/broadcasts", "./pages/projects/broadcast.tsx"),
+    route("projects/:id/announcements", "./pages/projects/announcements.tsx"),
 
     route("personnel", "./pages/personnel/personnel.tsx"),
   ]),

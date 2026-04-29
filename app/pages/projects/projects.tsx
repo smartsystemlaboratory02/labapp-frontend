@@ -15,7 +15,7 @@ const Projects = () => {
 
   const {
     data: allProjects = [],
-    isFetching: isFetchingProjects,
+    isLoading: isLoadingProjects,
     isError: isFetchingProjectsError,
     error: projectsError,
   } = useGetProjectsQuery();
@@ -57,7 +57,7 @@ const Projects = () => {
         </div>
       </motion.div>
 
-      {isFetchingProjects ? (
+      {isLoadingProjects ? (
         <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-2 mlg:grid-cols-3 gap-6 auto-rows-fr items-stretch">
           <BentoSkeleton />
           <BentoSkeleton />
@@ -97,7 +97,7 @@ const Projects = () => {
           Active Projects
         </h2>
 
-        {isFetchingProjects ? (
+        {isLoadingProjects ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 auto-rows-fr">
             <ProjectCardSkeleton />
             <ProjectCardSkeleton />

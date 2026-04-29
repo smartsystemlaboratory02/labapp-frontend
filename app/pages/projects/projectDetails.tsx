@@ -35,11 +35,23 @@ import {
 import { DeleteProjectModal } from "./components/DeleteProjectModal";
 import ProjectObjectives from "./components/objectives/ProjectObjectives";
 import ProjectTeamMembers from "./components/members/ProjectTeamMembers";
+import { useParams } from "react-router";
+import { useGetProjectQuery } from "~/services/projects/queries";
+import ProjectDetailsSkeleton from "./components/ProjectDetailsSkeleton";
 
 export default function ProjectDetails() {
   const navigate = useNavigate();
+  const params = useParams<{ id: string }>();
+  const projectId = params.id || "";
   const state = useLocation().state;
-  const project: ProjectInfo = state?.project;
+  const stateProject: ProjectInfo = state?.project;
+
+  const {
+    data: project,
+    isLoading,
+    isError,
+    error,
+  } = useGetProjectQuery(projectId, stateProject);
 
   useEffect(() => {
     if (!project) {
@@ -49,7 +61,19 @@ export default function ProjectDetails() {
         navigate("/projects");
       }, 2000);
     }
-  }, [project]);
+
+    if (isError) {
+      toast.error(
+        error.message || "Failed to load project details. Please try again.",
+      );
+
+      setTimeout(() => {
+        navigate("/projects");
+      }, 2000);
+    }
+  }, [project, isError, error]);
+
+  if (!project || isLoading) return <ProjectDetailsSkeleton />;
 
   const status = PROJECT_STATUS_MAP[project.status];
 
@@ -115,9 +139,12 @@ export default function ProjectDetails() {
               <MessageText size="18" className="mr-2" /> Feedback
             </Button>
           </Link>
-          <Link to={`/projects/${project.id}/broadcasts`} className="ml-auto">
+          <Link
+            to={`/projects/${project.id}/announcements`}
+            className="ml-auto"
+          >
             <Button className="flex items-center ml-0">
-              <Brodcast size="18" className="mr-2" /> Broadcasts
+              <Brodcast size="18" className="mr-2" /> Announcements
             </Button>
           </Link>
         </div>
@@ -142,7 +169,10 @@ export default function ProjectDetails() {
               <div className="grid grid-cols-2 gap-8 mt-10 pt-8 border-t border-zinc-200/50 ml-4">
                 <MetaItem
                   label="Created By"
-                  value={project.created_by || "--"}
+                  value={
+                    `${project.created_by.first_name} ${project.created_by.last_name}` ||
+                    "--"
+                  }
                 />
                 <MetaItem
                   label="Created At"

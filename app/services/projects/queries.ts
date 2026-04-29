@@ -7,12 +7,14 @@ import {
 import {
   addProjectMemberRequest,
   addProjectObjectiveRequest,
+  createProjectAnnouncementRequest,
   createProjectRequest,
   deleteProjectMemberRequest,
   deleteProjectObjectiveRequest,
   deleteProjectRequest,
   editProjectObjectiveRequest,
   editProjectRequest,
+  getProjectAnnouncementsRequest,
   getProjectRequest,
   getProjectsRequest,
   updateProjectMemberRoleRequest,
@@ -28,11 +30,15 @@ export const useGetProjectsQuery = () => {
   });
 };
 
-export const useGetProjectQuery = (projectId: string) => {
+export const useGetProjectQuery = (
+  projectId: string,
+  initialData?: ProjectInfo,
+) => {
   return useQuery({
     queryKey: ["getProject", projectId],
     queryFn: () => getProjectRequest(projectId),
     placeholderData: keepPreviousData,
+    initialData: initialData,
     staleTime: 300000,
   });
 };
@@ -162,6 +168,27 @@ export const useDeleteProjectMemberMutation = (
     onSuccess: () => {
       (queryClient.invalidateQueries({ queryKey: ["getProjects"] }),
         queryClient.invalidateQueries({ queryKey: ["getProject", projectId] }));
+    },
+  });
+};
+
+export const useGetProjectAnnouncementsQuery = (projectId: string) => {
+  return useQuery({
+    queryKey: ["getProjectAnnouncements", projectId],
+    queryFn: () => getProjectAnnouncementsRequest(projectId),
+  });
+};
+
+export const useCreateProjectAnnouncementMutation = (projectId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ title, content }: { title: string; content: string }) =>
+      createProjectAnnouncementRequest(projectId, title, content),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["getProjectAnnouncements", projectId],
+      });
     },
   });
 };

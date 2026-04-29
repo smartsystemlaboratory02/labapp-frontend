@@ -92,7 +92,7 @@ const ProjectObj = ({
             </div>
           </div>
         ) : (
-          <p className="font-medium text-sm text-zinc-700 leading-relaxed wrap-break-words whitespace-pre-wrap">
+          <p className="font-medium text-sm text-zinc-700 leading-relaxed wrap-break-words whitespace-pre-wrap mt-1">
             {objective.objective}
           </p>
         )}

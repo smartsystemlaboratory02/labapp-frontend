@@ -1,5 +1,5 @@
 import { makeRequest } from "../api";
-import type { Project, ProjectInfo } from "./types";
+import type { Project, ProjectAnnouncement, ProjectInfo } from "./types";
 
 export const createProjectRequest = (data: Project) =>
   makeRequest("/projects/", "POST", data);
@@ -58,3 +58,20 @@ export const updateProjectMemberRoleRequest = (
 
 export const deleteProjectMemberRequest = (memberId: string) =>
   makeRequest(`/projects/members/${memberId}`, "DELETE");
+
+export const getProjectAnnouncementsRequest = (projectId: string) =>
+  makeRequest<{ announcements: ProjectAnnouncement[] }>(
+    `/projects/announcements?project_id=${projectId}`,
+    "GET",
+  );
+
+export const createProjectAnnouncementRequest = (
+  projectId: string,
+  title: string,
+  content: string,
+) =>
+  makeRequest(`/projects/announcements`, "POST", {
+    project_id: projectId,
+    title,
+    content,
+  });

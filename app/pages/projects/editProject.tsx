@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { useFieldArray, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -45,7 +45,7 @@ import Spinner from "~/components/ui/Spinner";
 import { toast } from "sonner";
 import { useEditProjectMutation } from "~/services/projects/queries";
 import type { ProjectInfo } from "~/services/projects/types";
-import { PROJECT_STATUS_MAP } from "~/services/projects/utils";
+import { getChangedFields, normalizeProject, PROJECT_STATUS_MAP } from "~/services/projects/utils";
 import { is } from "date-fns/locale";
 import { containerVariants } from "~/motionVariants";
 import { motion } from "framer-motion";
@@ -62,6 +62,15 @@ const AddProject = () => {
   const state = useLocation().state;
   const project: ProjectInfo = state?.project || null;
 
+  const initialRef = useRef(
+    normalizeProject({
+      name: project.title,
+      description: project.description,
+      status: project.status,
+      deadline: new Date(project.deadline),
+    }),
+  );
+
   useEffect(() => {
     if (!project) {
       toast.error("Something went wrong. Please try again.");
@@ -71,6 +80,7 @@ const AddProject = () => {
       }, 2000);
     }
   }, [project]);
+  
 
   const status = project?.status ? PROJECT_STATUS_MAP[project.status] : null;
 
@@ -103,31 +113,20 @@ const AddProject = () => {
       toast.success("Project edited successfully");
 
       setTimeout(() => {
-        navigate("/projects");
+        navigate(-1);
       }, 2000);
     }
   }, [isEditingProjectError, editProjectError, projectEdited]);
 
   const onSubmit = (data: z.infer<typeof projectSchema>) => {
-    const payload: Record<string, any> = {};
-    const dirtyFields = form.formState.dirtyFields;
+    const current = normalizeProject(data);
+    const initial = initialRef.current;
 
-    console.log("Dirty Fields:", dirtyFields);
+    const payload = getChangedFields(current, initial);
 
-    if (Object.keys(dirtyFields).length === 0) {
+    if (Object.keys(payload).length === 0) {
       toast.error("No changes made to update.");
       return;
-    }
-
-    for (const key in form.formState.dirtyFields) {
-      const value = data[key as keyof z.infer<typeof projectSchema>];
-
-      if (value === undefined) continue;
-
-      payload[key] =
-        key === "deadline" && value instanceof Date
-          ? value.toISOString()
-          : value;
     }
 
     editProject(payload);
