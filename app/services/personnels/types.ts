@@ -8,7 +8,7 @@ export interface PersonnelInfo {
   niche: string
   bio: string
   phone_number: string
-  profile_img: string | null
+  profile_img?: string | null
   colour: string
 }
 

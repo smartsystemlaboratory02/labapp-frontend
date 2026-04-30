@@ -1,4 +1,8 @@
 import { makeRequest } from "../api";
+import type { PersonnelInfo } from "../personnels/types";
+
+export const getUserDataRequest = () =>
+  makeRequest<PersonnelInfo>("/user", "GET");
 
 export const refreshRequest = () => makeRequest("/auth/refresh-session", "POST");
 

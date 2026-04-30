@@ -15,15 +15,18 @@ export default [
   ]),
 
   layout("./layouts/main.tsx", [
-    route("dashboard", "./pages/dashboard/dashboard.tsx"),
+    layout("./layouts/authenticated.tsx", [
+      route("dashboard", "./pages/dashboard/dashboard.tsx"),
 
-    route("projects", "./pages/projects/projects.tsx"),
-    route("projects/add", "./pages/projects/addProject.tsx"),
-    route("projects/:id", "./pages/projects/projectDetails.tsx"),
-    route("projects/:id/edit", "./pages/projects/editProject.tsx"),
-    route("projects/:id/feedback", "./pages/projects/feedback.tsx"),
-    route("projects/:id/announcements", "./pages/projects/announcements.tsx"),
+      route("projects", "./pages/projects/projects.tsx"),
+      route("projects/add", "./pages/projects/addProject.tsx"),
+      route("projects/:id", "./pages/projects/projectDetails.tsx"),
+      route("projects/:id/edit", "./pages/projects/editProject.tsx"),
+      route("projects/:id/feedback", "./pages/projects/feedback.tsx"),
+      route("projects/:id/announcements", "./pages/projects/announcements.tsx"),
 
-    route("personnel", "./pages/personnel/personnel.tsx"),
+      route("personnel", "./pages/personnel/personnel.tsx"),
+      route("personnel/:id", "./pages/personnel/personnelDetails.tsx"),
+    ]),
   ]),
 ] satisfies RouteConfig;

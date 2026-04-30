@@ -1,4 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   forgotPasswordOtpRequest,
@@ -6,7 +11,18 @@ import {
   verifySignupOTPRequest,
   signupRequest,
   verifyForgotPasswordOtpRequest,
+  getUserDataRequest,
 } from "./requests";
+
+export const useGetUserDataQuery = () => {
+  return useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getUserDataRequest,
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
+    retry: false,
+  });
+};
 
 export const useSignup = () => {
   return useMutation({
@@ -23,9 +39,14 @@ export const useVerifySignupOtp = () => {
 };
 
 export const useLogin = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: loginRequest,
     mutationKey: ["loginRequest"],
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["currentUser"] });
+    },
   });
 };
 

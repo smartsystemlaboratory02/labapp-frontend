@@ -1,12 +1,10 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowLeft2 } from "iconsax-reactjs";
 
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import { cn } from "~/lib/utils";
-import PersonnelCard from "./components/PersonnelCard";
 import { useNavigate } from "react-router";
 import PageHeader from "~/components/ui/PageHeader";
 import { motion } from "framer-motion";
@@ -14,88 +12,8 @@ import { containerVariants } from "~/motionVariants";
 import { useGetAllPersonnelInfoQuery } from "~/services/personnels/queries";
 import { PersonnelDirectorySkeleton } from "./components/PersonnelDirectorySkeleton";
 import type { PersonnelInfo } from "~/services/personnels/types";
-import Personnel from "../../../uuaug";
 import PersonnelDirectorySection from "./components/PersonnelDirectorySection";
-
-const MOCK_PERSONNEL = {
-  admins: [
-    {
-      uid: "1",
-      name: "Prof. Dahunsi",
-      role: "Admin",
-      stack: "Management",
-      niche: "Administration",
-      initial: "DA",
-      color: "bg-primary text-white",
-    },
-  ],
-  software: {
-    leads: [
-      {
-        uid: "2",
-        name: "Sarah Chen",
-        role: "Lead",
-        stack: "Software",
-        niche: "Backend",
-        initial: "SC",
-        color: "bg-blue-100 text-blue-600",
-      },
-      {
-        uid: "2",
-        name: "Sarah Chen",
-        role: "Lead",
-        stack: "Software",
-        niche: "Backend",
-        initial: "SC",
-        color: "bg-blue-100 text-blue-600",
-      },
-    ],
-    interns: [
-      {
-        uid: "3",
-        name: "Samuel Okon",
-        role: "Intern",
-        stack: "Software",
-        niche: "Frontend",
-        initial: "SO",
-        color: "bg-zinc-100 text-zinc-600",
-      },
-      {
-        uid: "4",
-        name: "James Watt",
-        role: "Intern",
-        stack: "Software",
-        niche: "DevOps",
-        initial: "JW",
-        color: "bg-zinc-100 text-zinc-600",
-      },
-    ],
-  },
-  hardware: {
-    leads: [
-      {
-        uid: "5",
-        name: "Ibrahim Sule",
-        role: "Lead",
-        stack: "Hardware",
-        niche: "Embedded",
-        initial: "IS",
-        color: "bg-orange-100 text-orange-600",
-      },
-    ],
-    interns: [
-      {
-        uid: "6",
-        name: "Elena Rodriguez",
-        role: "Intern",
-        stack: "Hardware",
-        niche: "Robotics",
-        initial: "ER",
-        color: "bg-zinc-100 text-zinc-600",
-      },
-    ],
-  },
-};
+import BackButton from "~/components/ui/BackButton";
 
 type GroupedPersonnel = {
   admins: PersonnelInfo[];
@@ -149,14 +67,7 @@ export default function PersonnelDirectory() {
   return (
     <div className="p-6 lg:p-10 mx-auto space-y-10 selection:bg-primary/10">
       <div className="flex items-center gap-6">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(-1)}
-          className="rounded-2xl hover:bg-zinc-100 items-center justify-center flex ml-0 mt-0 border"
-        >
-          <ArrowLeft2 size="32" />
-        </Button>
+        <BackButton />
 
         <PageHeader title="personnel directory" description="" />
       </div>
@@ -203,7 +114,6 @@ export default function PersonnelDirectory() {
             personnel={groupedPersonnel[stack].leads}
             role="lead"
           />
-          {/* Interns column */}
           <PersonnelDirectorySection
             personnel={groupedPersonnel[stack].interns}
             role="intern"

@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getDashboardDataRequest, getUserDataRequest } from "./requests";
+import { getDashboardDataRequest } from "./requests";
 
 export const useGetDashboardDataQuery = () => {
   return useQuery({
@@ -10,11 +10,4 @@ export const useGetDashboardDataQuery = () => {
   });
 };
 
-export const useGetUserDataQuery = () => {
-  return useQuery({
-    queryKey: ["getUserData"],
-    queryFn: getUserDataRequest,
-    staleTime: 600000,
-    placeholderData: keepPreviousData,
-  });
-};
+

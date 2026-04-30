@@ -22,6 +22,7 @@ import { Input } from "~/components/ui/input";
 import { useLogin } from "~/services/onboarding/queries";
 import { toast } from "sonner";
 import { RiseLoader } from "react-spinners";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formSchema = z.object({
   email: z.email("Please enter a valid email"),
@@ -30,7 +31,6 @@ const formSchema = z.object({
 
 const Login = () => {
   const navigate = useNavigate();
-  // const queryClient = useQueryClient();
 
   const {
     mutate: loginMutation,
@@ -56,20 +56,12 @@ const Login = () => {
 
     if (isSuccess) {
       toast.success("Welcome back!");
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 1500);
     }
   }, [isError, error, isSuccess]);
-
-  //   setTimeout(() => {
-  //     queryClient.invalidateQueries({ queryKey: ["currentUser"] });
-  //     const homepage = response.data?.is_superuser
-  //       ? "/admin/users"
-  //       : "/home/evidences";
-  //     navigate(homepage);
-  //   }, 1500);
-  // }
 
   return (
     <motion.div

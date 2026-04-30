@@ -1,4 +1,3 @@
-import React from "react";
 import { Badge } from "~/components/ui/badge";
 import type { PersonnelInfo } from "~/services/personnels/types";
 import PersonnelCard from "./PersonnelCard";
@@ -29,8 +28,8 @@ const PersonnelDirectorySection = ({
     <div className="space-y-6">
       <SectionHeader title={`${role}s`} count={count} />
       {count === 0 ? (
-        <div className="flex flex-col items-center justify-center text-center py-12 px-6 border border-dashed border-zinc-400 rounded-[2rem] bg-zinc-100/50">
-          <div className="size-12 rounded-2xl bg-zinc-200 flex items-center justify-center mb-4">
+        <div className="flex flex-col items-center justify-center text-center py-12 px-12 border border-dashed border-zinc-400 rounded-[2rem] bg-zinc-100/50 w-fit">
+          <div className="size-9 rounded-2xl bg-zinc-200 flex items-center justify-center mb-4">
             <span className="text-lg font-black text-zinc-400">0</span>
           </div>
 

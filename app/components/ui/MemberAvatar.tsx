@@ -2,9 +2,9 @@ import React from "react";
 import { getInitials } from "~/utils/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import type { ProjectInfoMember } from "~/services/projects/types";
-import type { Personnel } from "~/services/personnels/types";
+import type { Personnel, PersonnelInfo } from "~/services/personnels/types";
 
-const MemberAvatar = ({ member }: { member: ProjectInfoMember | Personnel}) => {
+const MemberAvatar = ({ member }: { member: ProjectInfoMember | Personnel | PersonnelInfo}) => {
   return (
     <Avatar>
       <AvatarImage src={member.profile_img || undefined} />
