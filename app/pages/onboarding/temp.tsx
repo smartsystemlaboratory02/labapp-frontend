@@ -19,7 +19,7 @@ import {
 import { Input } from "~/components/ui/input";
 import Logo from "~/components/ui/Logo";
 import LinkText from "~/components/ui/LinkText";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { RiseLoader } from "react-spinners";
 import { useForgotPasswordMutation } from "~/services/onboarding/queries";
 import { toast } from "sonner";
