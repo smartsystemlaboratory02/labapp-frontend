@@ -2,92 +2,66 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { motion } from "framer-motion";
 import {
-  ArrowLeft2,
   Edit,
-  Trash,
   Lock,
-  Sms,
-  Call,
-  Calendar,
-  Briefcase,
-  Personalcard,
   Global,
-  Copy,
-  TickCircle,
+  UserRemove,
+  Unlock,
+  UserEdit,
+  More,
 } from "iconsax-reactjs";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
 import BackButton from "~/components/ui/BackButton";
 import PageHeader from "~/components/ui/PageHeader";
 import { containerVariants, itemVariants } from "~/motionVariants";
 import { toast } from "sonner";
 import { useGetUserDataQuery } from "~/services/onboarding/queries";
-import { getInitials } from "~/utils/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import type { PersonnelInfo } from "~/services/personnels/types";
-import { set } from "date-fns";
 import ContactDetails from "./components/details/ContactDetails";
 import Hero from "./components/details/Hero";
 
-// Mocking the data structure based on your directory code
-// interface PersonnelInfo {
-//   id: string;
-//   first_name: string;
-//   last_name: string;
-//   role: "admin" | "lead" | "intern";
-//   stack: "software" | "hardware";
-//   niche: string;
-//   email: string;
-//   phone: string;
-//   gender: string;
-//   dob: string;
-//   date_joined: string;
-//   bio?: string;
-//   colour?: string;
-//   avatar_url?: string;
-// }
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "~/components/ui/hover-card";
+import { ChangeUserRoleModal } from "./components/details/ChangeUserRoleModal";
+import { useGetPersonnelInfoByIdQuery } from "~/services/personnels/queries";
+import PersonnelDetailsSkeleton from "./components/details/PersonnelDetailsSkeleton";
+import { DeactivateUserModal } from "./components/details/DeactivateUserModal";
+import { ActivateUserModal } from "./components/details/ActivateUserModal";
 
 export default function PersonnelProfileDetails() {
   const navigate = useNavigate();
-
   const params = useParams<{ id: string }>();
-  const user_id = params.id || "";
-
+  const userId = params.id || "";
   const state = useLocation().state;
   const statePersonnel: PersonnelInfo = state?.personnel;
+
+  const {
+    data: personnel,
+    isLoading,
+    isError,
+    error,
+  } = useGetPersonnelInfoByIdQuery(userId, statePersonnel);
 
   const { data: user } = useGetUserDataQuery();
   const userIsAdmin = user?.role === "admin";
 
   useEffect(() => {
-    if (!statePersonnel) {
-      toast.error("Failed to load personnel details. Please try again.");
+    if (isError) {
+      toast.error(
+        error.message || "Failed to load personnel details. Please try again.",
+      );
 
       setTimeout(() => {
         navigate("/personnel");
       }, 2000);
     }
-  }, []);
+  }, [personnel, isError, error]);
 
-  // Replace this with your actual query: const { data: person } = useGetPersonnelByIdQuery(id);
-  const person: PersonnelInfo = {
-    id: "1",
-    first_name: "Ogunjirin",
-    last_name: "Boluwatife Mercy",
-    role: "intern",
-    stack: "software",
-    niche: "UX Designer",
-    email: "yesgirl@gmail.com",
-    phone_number: "09076323421",
-    profile_img:
-      "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
-    // gender: "Female",
-    // dob: "28th May",
-    // date_joined: "20/01/24",
-    bio: "Passionate about creating seamless user experiences and modern interfaces. Currently exploring the intersection of AI and design systems within the Smart Systems Research Lab.",
-    colour: "#E0F2FE",
-  };
+  if (!personnel || isLoading) return <PersonnelDetailsSkeleton />;
 
   return (
     <div className="p-6 lg:p-10 mx-auto max-w-400 space-y-8">
@@ -97,23 +71,47 @@ export default function PersonnelProfileDetails() {
           <PageHeader title="personnel profile" description="" />
         </div>
 
-        {userIsAdmin && !(user.id === statePersonnel.id) && (
-          <div className="flex items-center gap-2 mr-12">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-2xl hover:bg-zinc-100 items-center justify-center flex ml-0 mt-0 border"
+        {userIsAdmin && user.id !== personnel.id && (
+          <HoverCard openDelay={100} closeDelay={100}>
+            <HoverCardTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-full hover:bg-zinc-100 flex items-center justify-center border shadow-sm size-10 transition-all active:scale-95"
+              >
+                <More size="24" className="text-zinc-600" />
+              </Button>
+            </HoverCardTrigger>
+
+            <HoverCardContent
+              side="bottom"
+              align="end"
+              className="w-56 p-2 rounded-[1.5rem] border-zinc-200 shadow-xl bg-white animate-in fade-in zoom-in-95 duration-200"
             >
-              <Edit size="32" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-2xl hover:bg-destructive/10 items-center justify-center flex ml-0 mt-0 border border-destructive text-destructive hover:text-destructive "
-            >
-              <Trash size="32" />
-            </Button>
-          </div>
+              <div className="flex flex-col gap-1">
+                <ChangeUserRoleModal
+                  userId={personnel.id}
+                  role={personnel.role}
+                />
+
+                {personnel.is_active ? (
+                  <DeactivateUserModal userId={userId} />
+                ) : (
+                  <ActivateUserModal userId={userId} />
+                )}
+
+                <button
+                  className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-red-50 text-red-500 transition-colors group"
+                  disabled
+                >
+                  <div className="size-8 rounded-lg bg-red-100 flex items-center justify-center">
+                    <UserRemove size="18" variant="Bold" />
+                  </div>
+                  <p className="text-xs font-bold">Remove Intern</p>
+                </button>
+              </div>
+            </HoverCardContent>
+          </HoverCard>
         )}
       </div>
 
@@ -124,8 +122,8 @@ export default function PersonnelProfileDetails() {
         className="grid grid-cols-1 lg:grid-cols-12 gap-6"
       >
         <motion.div variants={itemVariants} className="lg:col-span-4 space-y-6">
-          <Hero personnel={statePersonnel} />
-          <ContactDetails personnel={statePersonnel} />
+          <Hero personnel={personnel} />
+          <ContactDetails personnel={personnel} />
         </motion.div>
 
         <motion.div variants={itemVariants} className="lg:col-span-8 space-y-6">
@@ -163,16 +161,15 @@ export default function PersonnelProfileDetails() {
             <p
               className={cn(
                 "text-sm leading-relaxed text-zinc-600 font-medium",
-                !statePersonnel.bio && "italic text-zinc-400",
+                !personnel.bio && "italic text-zinc-400",
               )}
             >
-              {statePersonnel.bio ||
-                "No biography provided for this personnel."}
+              {personnel.bio || "No biography provided for this personnel."}
             </p>
           </div>
 
           {/* Security / Admin Actions Area */}
-          <div className="bg-zinc-900 rounded-[2.5rem] p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* <div className="bg-zinc-900 rounded-[2.5rem] p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-4">
               <div className="size-12 rounded-2xl bg-white/10 flex items-center justify-center">
                 <Lock size="24" variant="Bold" />
@@ -187,7 +184,7 @@ export default function PersonnelProfileDetails() {
             <Button className="bg-white text-zinc-900 hover:bg-zinc-200 rounded-xl font-black text-xs uppercase px-8">
               Suspend Account
             </Button>
-          </div>
+          </div> */}
         </motion.div>
       </motion.div>
     </div>

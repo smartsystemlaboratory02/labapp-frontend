@@ -5,14 +5,14 @@ import { getInitials } from "~/utils/utils";
 
 const Hero = ({ personnel }: { personnel: PersonnelInfo }) => {
   return (
-    <div className="bg-white border border-zinc-200 rounded-[2.5rem] p-8 flex flex-col items-center text-center shadow-sm space-y-6">
+    <div className="bg-white border border-zinc-200 rounded-[2.5rem] p-8 flex flex-col items-center text-center shadow-sm space-y-6" >
       <Avatar className="size-32">
         <AvatarImage src={personnel.profile_img || undefined} />
         <AvatarFallback>
           <div
             className="size-32 rounded-[2rem] flex items-center justify-center shadow-inner"
             style={{
-              backgroundColor: personnel.colour || "#f4f4f5",
+              backgroundColor: personnel.color || "#f4f4f5",
             }}
           >
             <span className="text-4xl font-black text-zinc-800">

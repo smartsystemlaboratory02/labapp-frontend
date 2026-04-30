@@ -12,7 +12,7 @@ const PersonnelCard = ({ person }: { person: PersonnelInfo }) => (
       className="flex items-center gap-4 p-4 bg-white border border-zinc-100 rounded-[1.5rem] hover:border-primary/20 transition-all shadow-sm"
     >
       <div
-        style={{ backgroundColor: person.colour || "#f4f4f5" }}
+        style={{ backgroundColor: person.color || "#f4f4f5" }}
         className={cn(
           "size-10 rounded-xl flex items-center justify-center font-black text-xs shrink-0",
         )}
