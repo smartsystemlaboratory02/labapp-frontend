@@ -1,5 +1,5 @@
 import * as React from "react";
-import { NavLink, Link, useLocation } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import {
   Category,
   People,
@@ -25,6 +25,8 @@ import {
 } from "~/components/ui/sidebar";
 import HorizontalLogo from "../ui/HorizontalLogo";
 import { cn } from "~/lib/utils";
+import { useLogoutMutation } from "~/services/onboarding/queries";
+import { toast } from "sonner";
 
 const navData = [
   { title: "Dashboard", url: "/dashboard", icon: Category },
@@ -42,6 +44,14 @@ export default function AppSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
+
+  const { mutate: logout, isError, isPending } = useLogoutMutation();
+
+  React.useEffect(() => {
+    if (isError) {
+      toast.error("Failed to logout");
+    }
+  }, [isError]);
 
   return (
     <Sidebar
@@ -106,21 +116,23 @@ export default function AppSidebar({
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter className="pb-10 px-6">
+      <SidebarFooter className="pb-10 px-6 pr-0">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
               asChild
-              className="h-12 rounded-xl text-zinc-100/70 hover:text-red-400 hover:bg-white/10 transition-all duration-300 group"
+              className="logout-button rounded-xl text-zinc-100/70 hover:text-red-500 hover:bg-white transition-all duration-300 group h-12 rounded-l-full px-2"
             >
-              <Link to="/">
+              <button className="flex" onClick={() => logout()}>
                 <Logout
                   size="20"
                   variant="Linear"
-                  className="shrink-0 transition-transform group-hover:-translate-x-1"
+                  className="shrink-0 transition-transform group-hover:translate-x-1"
                 />
-                <span className="font-bold ml-3 text-sm">Log Out</span>
-              </Link>
+                <span className="font-bold ml-3 text-sm">
+                  {isPending ? "Logging Out..." : "Log Out"}
+                </span>
+              </button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

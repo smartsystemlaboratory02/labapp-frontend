@@ -12,7 +12,10 @@ import {
   signupRequest,
   verifyForgotPasswordOtpRequest,
   getUserDataRequest,
+  logoutRequest,
 } from "./requests";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export const useGetUserDataQuery = () => {
   return useQuery({
@@ -61,5 +64,21 @@ export const useVerifyForgotPasswordOtp = () => {
   return useMutation({
     mutationFn: verifyForgotPasswordOtpRequest,
     mutationKey: ["verifyForgotPasswordOtpRequest"],
+  });
+};
+
+export const useLogoutMutation = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: () => logoutRequest(),
+    mutationKey: ["logoutRequest"],
+    onSuccess: () => {
+      toast.success("Logged out successfully");
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    },
   });
 };

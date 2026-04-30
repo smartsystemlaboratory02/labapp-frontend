@@ -4,12 +4,13 @@ import type { PersonnelInfo } from "../personnels/types";
 export const getUserDataRequest = () =>
   makeRequest<PersonnelInfo>("/user", "GET");
 
-export const refreshRequest = () => makeRequest("/auth/refresh-session", "POST");
+export const refreshRequest = () =>
+  makeRequest("/auth/refresh-session", "POST");
 
 export const signupRequest = (data: FormData) =>
   makeRequest("/auth/register", "POST", data);
 
-export const verifySignupOTPRequest = (data: { email: string, otp: number }) =>
+export const verifySignupOTPRequest = (data: { email: string; otp: number }) =>
   makeRequest("/auth/verify-otp", "POST", data);
 
 export const loginRequest = (data: { email: string; password: string }) =>
@@ -23,3 +24,5 @@ export const verifyForgotPasswordOtpRequest = (data: {
   otp: number;
   new_password: string;
 }) => makeRequest("/auth/reset-password-with-otp", "POST", data);
+
+export const logoutRequest = () => makeRequest("/auth/logout", "POST");

@@ -178,3 +178,40 @@ body {
   transition: all 200 ease-in-out;
   z-index: 10;
 }
+
+.logout-button:hover,
+.logout-button:focus-visible {
+  @apply relative rounded-l-full bg-white transition-all duration-200 ease-in-out overflow-visible;
+}
+
+.logout-button:hover::before,
+.logout-button:focus-visible::before {
+  padding: 10px;
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  right: 0px;
+  top: 100%;
+  height: 100%;
+  width: 20%;
+  border-top-right-radius: 50%;
+  box-shadow: 0 -25px 0 0 white;
+  transition: all 200 ease-in-out;
+  z-index: 10;
+}
+
+.logout-button:hover::after,
+.logout-button:focus-visible::after {
+  padding: 10px;
+  content: "";
+  position: absolute;
+  background-color: transparent;
+  right: 0px;
+  bottom: 100%;
+  height: 100%;
+  width: 20%;
+  border-bottom-right-radius: 50%;
+  box-shadow: 0 25px 0 0 white;
+  transition: all 200 ease-in-out;
+  z-index: 10;
+}
