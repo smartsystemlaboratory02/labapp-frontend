@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { motion } from "framer-motion";
 import {
-  Edit,
-  Lock,
   Global,
   UserRemove,
-  Unlock,
-  UserEdit,
   More,
+  Personalcard,
+  Calendar,
+  Briefcase,
 } from "iconsax-reactjs";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -31,6 +30,7 @@ import { useGetPersonnelInfoByIdQuery } from "~/services/personnels/queries";
 import PersonnelDetailsSkeleton from "./components/details/PersonnelDetailsSkeleton";
 import { DeactivateUserModal } from "./components/details/DeactivateUserModal";
 import { ActivateUserModal } from "./components/details/ActivateUserModal";
+import { format } from "date-fns";
 
 export default function PersonnelProfileDetails() {
   const navigate = useNavigate();
@@ -129,23 +129,35 @@ export default function PersonnelProfileDetails() {
         <motion.div variants={itemVariants} className="lg:col-span-8 space-y-6">
           {/* Info Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* <InfoCard
-              icon={<Personalcard size="20" variant="Bold" />}
-              label="Gender"
-              value={person.gender}
-            /> */}
-            {/* <InfoCard
-              icon={<Calendar size="20" variant="Bold" />}
-              label="Birthday"
-              value={person.dob}
-            /> */}
-            {/* <InfoCard
-              icon={<Briefcase size="20" variant="Bold" />}
-              label="Date Joined"
-              value={person.date_joined}
-            /> */}
             <InfoCard
-              icon={<Global size="20" variant="Bold" />}
+              icon={
+                <Personalcard
+                  size="24"
+                  variant="Bold"
+                  className="text-primary"
+                />
+              }
+              label="Gender"
+              value={personnel.gender.toLocaleUpperCase()}
+            />
+            <InfoCard
+              icon={
+                <Calendar size="24" variant="Bold" className="text-primary" />
+              }
+              label="Birthday"
+              value={format(new Date(personnel.date_of_birth), "PPP")}
+            />
+            <InfoCard
+              icon={
+                <Briefcase size="24" variant="Bold" className="text-primary" />
+              }
+              label="Date Joined"
+              value={format(new Date(personnel.created_at), "PPP")}
+            />
+            <InfoCard
+              icon={
+                <Global size="24" variant="Bold" className="text-primary" />
+              }
               label="Account Status"
               value="Active"
               valueClassName="text-green-600"
@@ -203,7 +215,7 @@ const InfoCard = ({
   valueClassName?: string;
 }) => (
   <div className="bg-white border border-zinc-200 rounded-[2rem] p-6 flex items-center gap-4 shadow-sm">
-    <div className="size-12 rounded-2xl bg-zinc-100 flex items-center justify-center text-zinc-500">
+    <div className="size-12 rounded-2xl bg-primary/20 flex items-center justify-center text-zinc-500">
       {icon}
     </div>
     <div>

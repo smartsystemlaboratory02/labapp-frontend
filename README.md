@@ -194,3 +194,181 @@ LabApp
 └─ vite.config.ts
 
 ```
+```
+LabApp
+├─ .dockerignore
+├─ app
+│  ├─ app.css
+│  ├─ components
+│  │  ├─ layout
+│  │  │  └─ sidebar.tsx
+│  │  └─ ui
+│  │     ├─ ActionModal.tsx
+│  │     ├─ avatar.tsx
+│  │     ├─ BackButton.tsx
+│  │     ├─ badge.tsx
+│  │     ├─ BentoSkeleton.tsx
+│  │     ├─ button.tsx
+│  │     ├─ calendar.tsx
+│  │     ├─ card.tsx
+│  │     ├─ ComingSoonMask.tsx
+│  │     ├─ dialog.tsx
+│  │     ├─ drawer.tsx
+│  │     ├─ field.tsx
+│  │     ├─ form.tsx
+│  │     ├─ GoogleLogo.tsx
+│  │     ├─ HorizontalLogo.tsx
+│  │     ├─ hover-card.tsx
+│  │     ├─ input-otp.tsx
+│  │     ├─ input.tsx
+│  │     ├─ label.tsx
+│  │     ├─ LinkText.tsx
+│  │     ├─ Logo.tsx
+│  │     ├─ MemberAvatar.tsx
+│  │     ├─ Or.tsx
+│  │     ├─ PageHeader.tsx
+│  │     ├─ popover.tsx
+│  │     ├─ SectionHeader.tsx
+│  │     ├─ select.tsx
+│  │     ├─ separator.tsx
+│  │     ├─ sheet.tsx
+│  │     ├─ sidebar.tsx
+│  │     ├─ skeleton.tsx
+│  │     ├─ sonner.tsx
+│  │     ├─ Spinner.tsx
+│  │     ├─ tabs.tsx
+│  │     ├─ textarea.tsx
+│  │     ├─ TextLogo.tsx
+│  │     └─ tooltip.tsx
+│  ├─ dashboardDemo.ts
+│  ├─ hooks
+│  │  ├─ use-media-query.ts
+│  │  └─ use-mobile.ts
+│  ├─ layouts
+│  │  ├─ authenticated.tsx
+│  │  ├─ main.tsx
+│  │  └─ onboarding.tsx
+│  ├─ lib
+│  │  └─ utils.ts
+│  ├─ motionVariants.ts
+│  ├─ pages
+│  │  ├─ dashboard
+│  │  │  ├─ components
+│  │  │  │  ├─ DashboardCard.tsx
+│  │  │  │  ├─ DashboardError.tsx
+│  │  │  │  ├─ DashboardSkeleton.tsx
+│  │  │  │  ├─ notifications
+│  │  │  │  │  ├─ NotificationItem.tsx
+│  │  │  │  │  └─ Notifications.tsx
+│  │  │  │  ├─ projects
+│  │  │  │  │  ├─ ProjectItem.tsx
+│  │  │  │  │  └─ Projects.tsx
+│  │  │  │  ├─ reports
+│  │  │  │  │  ├─ ReportItem.tsx
+│  │  │  │  │  └─ Reports.tsx
+│  │  │  │  ├─ requests
+│  │  │  │  │  ├─ RequestItem.tsx
+│  │  │  │  │  └─ Requests.tsx
+│  │  │  │  ├─ todos
+│  │  │  │  │  ├─ TodoItem.tsx
+│  │  │  │  │  └─ Todos.tsx
+│  │  │  │  └─ WelcomeHero.tsx
+│  │  │  └─ dashboard.tsx
+│  │  ├─ onboarding
+│  │  │  ├─ forgotPassword.tsx
+│  │  │  ├─ login.tsx
+│  │  │  ├─ otp.tsx
+│  │  │  ├─ resetPassword.tsx
+│  │  │  └─ signup.tsx
+│  │  ├─ personnel
+│  │  │  ├─ components
+│  │  │  │  ├─ details
+│  │  │  │  │  ├─ ActivateUserModal.tsx
+│  │  │  │  │  ├─ ChangeUserRoleModal.tsx
+│  │  │  │  │  ├─ ContactDetails.tsx
+│  │  │  │  │  ├─ DeactivateUserModal.tsx
+│  │  │  │  │  ├─ Hero.tsx
+│  │  │  │  │  └─ PersonnelDetailsSkeleton.tsx
+│  │  │  │  ├─ PersonnelCard.tsx
+│  │  │  │  ├─ PersonnelDirectorySection.tsx
+│  │  │  │  └─ PersonnelDirectorySkeleton.tsx
+│  │  │  ├─ personnel.tsx
+│  │  │  └─ personnelDetails.tsx
+│  │  └─ projects
+│  │     ├─ addProject.tsx
+│  │     ├─ announcements.tsx
+│  │     ├─ components
+│  │     │  ├─ announcement
+│  │     │  │  ├─ AnnouncementCard.tsx
+│  │     │  │  ├─ AnnouncementCardSkeleton.tsx
+│  │     │  │  ├─ DeleteAnnouncement.tsx
+│  │     │  │  └─ UpdateAnnouncementModal.tsx
+│  │     │  ├─ DeleteProjectModal.tsx
+│  │     │  ├─ FeedbackCard.tsx
+│  │     │  ├─ FeedbackModal.tsx
+│  │     │  ├─ members
+│  │     │  │  ├─ AddProjectMemberModal.tsx
+│  │     │  │  ├─ DeleteProjectMemberModal.tsx
+│  │     │  │  ├─ ProjectTeamMembers.tsx
+│  │     │  │  ├─ TeamMember.tsx
+│  │     │  │  └─ UpdateMemberRoleModal.tsx
+│  │     │  ├─ objectives
+│  │     │  │  ├─ DeleteObjectiveModal.tsx
+│  │     │  │  ├─ ProjectObj.tsx
+│  │     │  │  └─ ProjectObjectives.tsx
+│  │     │  ├─ ProjectCard.tsx
+│  │     │  ├─ ProjectCardSkeleton.tsx
+│  │     │  ├─ ProjectDetailsSkeleton.tsx
+│  │     │  ├─ resources
+│  │     │  │  ├─ AddResourceModal.tsx
+│  │     │  │  ├─ ResourceLink.tsx
+│  │     │  │  └─ Resources.tsx
+│  │     │  └─ StatCard.tsx
+│  │     ├─ editProject.tsx
+│  │     ├─ feedback.tsx
+│  │     ├─ projectDetails.tsx
+│  │     └─ projects.tsx
+│  ├─ root.tsx
+│  ├─ routes.ts
+│  ├─ services
+│  │  ├─ api.ts
+│  │  ├─ dashboard
+│  │  │  ├─ queries.ts
+│  │  │  ├─ requests.ts
+│  │  │  ├─ types.ts
+│  │  │  └─ utils.ts
+│  │  ├─ onboarding
+│  │  │  ├─ queries.ts
+│  │  │  └─ requests.ts
+│  │  ├─ personnels
+│  │  │  ├─ queries.ts
+│  │  │  ├─ requests.ts
+│  │  │  └─ types.ts
+│  │  └─ projects
+│  │     ├─ queries.ts
+│  │     ├─ requests.ts
+│  │     ├─ types.ts
+│  │     └─ utils.ts
+│  ├─ types.ts
+│  └─ utils
+│     ├─ getSession.ts
+│     └─ utils.ts
+├─ components.json
+├─ Dockerfile
+├─ package.json
+├─ pnpm-lock.yaml
+├─ public
+│  ├─ favicon.ico
+│  ├─ logo.svg
+│  ├─ onboarding-image.jpg
+│  ├─ signup-image.jpg
+│  ├─ ssrl-logo.png
+│  ├─ workgif.webp
+│  └─ workgif2.webp
+├─ react-router.config.ts
+├─ README.md
+├─ tsconfig.json
+├─ uuaug.tsx
+└─ vite.config.ts
+
+```

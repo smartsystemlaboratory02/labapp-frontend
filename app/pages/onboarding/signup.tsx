@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { motion } from "framer-motion";
 import { Add, Camera } from "iconsax-reactjs";
-import { Asterisk } from "lucide-react";
+import { Asterisk, CalendarIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 
 import { Button } from "~/components/ui/button";
@@ -33,6 +33,13 @@ import { RiseLoader } from "react-spinners";
 import { useSignup } from "~/services/onboarding/queries";
 
 import { toast } from "sonner";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { format } from "date-fns";
+import { Calendar } from "~/components/ui/calendar";
 
 const formSchema = z
   .object({
@@ -47,6 +54,10 @@ const formSchema = z
     niche: z.string().min(1, "Niche is required"),
     bio: z.string().optional(),
     role: z.string().min(1, "Please select a role"),
+    date_of_birth: z.date().refine((val) => val !== undefined || val !== null, {
+      message: "Date of birth is required",
+    }),
+    gender: z.string().min(1, "Please select a gender"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
     confirmPassword: z
       .string()
@@ -89,6 +100,8 @@ const Signup = () => {
       role: "intern",
       password: "",
       confirmPassword: "",
+      gender: "",
+      date_of_birth: undefined,
     },
   });
 
@@ -119,6 +132,10 @@ const Signup = () => {
 
     Object.entries(data).forEach(([key, value]) => {
       if (key === "confirmPassword") return;
+      if (key === "date_of_birth") {
+        formData.append(key, format(value, "yyyy-MM-dd"));
+        return;
+      }
       formData.append(key, String(value));
     });
 
@@ -283,6 +300,81 @@ const Signup = () => {
                       />
                     </FormControl>
                     <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="gender"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                      Gender <Asterisk className="w-3 h-3 text-red-500" />
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="h-11 bg-zinc-50/50 dark:bg-zinc-900/50">
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent position="popper">
+                        <SelectItem value="male">Male</SelectItem>
+                        <SelectItem value="female">Female</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="date_of_birth"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+                      Date of Birth{" "}
+                      <Asterisk className="w-3 h-3 text-red-500" />
+                    </FormLabel>
+
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <button
+                            type="button"
+                            className={`flex w-full items-center gap-3 rounded-xl border bg-zinc-50/50 px-5 py-4 text-left transition-all hover:border-zinc-200 focus:border-primary outline-none ${
+                              !field.value ? "text-zinc-400" : "text-zinc-900"
+                            } border-zinc-200 h-fit`}
+                          >
+                            <CalendarIcon size={18} className="text-zinc-400" />
+                            <span className="text-xs font-medium">
+                              {field.value
+                                ? format(field.value, "PPP")
+                                : "Date of Birth"}
+                            </span>
+                          </button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="w-auto p-0 rounded-2xl border-zinc-200 shadow-2xl"
+                        align="start"
+                      >
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          disabled={(date_of_birth) =>
+                            date_of_birth > new Date() ||
+                            date_of_birth < new Date("1900-01-01")
+                          }
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage className="text-xs text-rose-500 ml-1" />
                   </FormItem>
                 )}
               />

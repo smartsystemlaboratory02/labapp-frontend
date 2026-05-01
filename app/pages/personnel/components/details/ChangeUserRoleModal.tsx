@@ -62,7 +62,7 @@ export const ChangeUserRoleModal = ({
 };
 
 const memberSchema = z.object({
-  role: z.enum(["lead", "intern", "admin"]),
+  role: z.enum(["lead", "intern", "admin"]).nonoptional(),
 });
 
 const UpdateUserRoleForm = ({
