@@ -29,6 +29,7 @@ import {
   InputOTPSlot,
 } from "~/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
+import Spinner from "~/components/ui/Spinner";
 
 const formSchema = z
   .object({
@@ -194,10 +195,10 @@ const ResetPassword = () => {
             <Button
               type="submit"
               disabled={isPending}
-              className="flex items-center justify-center gap-2"
+              className="flex items-center justify-center gap-2 ml-auto"
             >
               {isPending ? (
-                <RiseLoader className="text-white" />
+                <Spinner />
               ) : (
                 <>
                   <ShieldTick className="w-5 h-5" />

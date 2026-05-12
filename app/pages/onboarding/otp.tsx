@@ -27,6 +27,7 @@ import { useEffect } from "react";
 import { ArrowLeft, ShieldTick } from "iconsax-reactjs";
 import { useVerifySignupOtp } from "~/services/onboarding/queries";
 import { toast } from "sonner";
+import Spinner from "~/components/ui/Spinner";
 
 const FormSchema = z.object({
   code: z.string().min(6, "Please enter the full 6-digit code."),
@@ -131,10 +132,10 @@ const OTPPage = () => {
             <Button
               type="submit"
               disabled={isPending}
-              className="flex items-center justify-center gap-2"
+              className="flex items-center justify-center gap-2 ml-auto"
             >
               {isPending ? (
-                <RiseLoader className="text-white" />
+                <Spinner/>
               ) : (
                 <>
                   <ShieldTick className="w-5 h-5" />

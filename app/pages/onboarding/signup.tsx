@@ -29,7 +29,6 @@ import {
 } from "~/components/ui/select";
 import Logo from "~/components/ui/Logo";
 
-import { RiseLoader } from "react-spinners";
 import { useSignup } from "~/services/onboarding/queries";
 
 import { toast } from "sonner";
@@ -40,6 +39,7 @@ import {
 } from "~/components/ui/popover";
 import { format } from "date-fns";
 import { Calendar } from "~/components/ui/calendar";
+import Spinner from "~/components/ui/Spinner";
 
 const formSchema = z
   .object({
@@ -365,6 +365,7 @@ const Signup = () => {
                       >
                         <Calendar
                           mode="single"
+                          captionLayout="dropdown"
                           selected={field.value}
                           onSelect={field.onChange}
                           disabled={(date_of_birth) =>
@@ -446,12 +447,8 @@ const Signup = () => {
               )}
             />
 
-            <Button type="submit" disabled={isPending}>
-              {isPending ? (
-                <RiseLoader color="white" />
-              ) : (
-                "Create Personnel Account"
-              )}
+            <Button type="submit" disabled={isPending} className="ml-auto">
+              {isPending ? <Spinner /> : "Create Personnel Account"}
             </Button>
           </form>
         </Form>

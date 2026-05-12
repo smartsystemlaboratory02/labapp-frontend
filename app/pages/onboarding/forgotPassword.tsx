@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import { RiseLoader } from "react-spinners";
 import { useForgotPasswordMutation } from "~/services/onboarding/queries";
 import { toast } from "sonner";
+import Spinner from "~/components/ui/Spinner";
 
 const formSchema = z.object({
   email: z.email("Please enter a valid email address"),
@@ -101,8 +102,8 @@ const ForgotPassword = () => {
               )}
             />
 
-            <Button type="submit" disabled={isPending}>
-              {isPending ? <RiseLoader color="white" /> : "Send OTP"}
+            <Button type="submit" disabled={isPending} className="ml-auto">
+              {isPending ? <Spinner /> : "Send OTP"}
             </Button>
           </form>
         </Form>

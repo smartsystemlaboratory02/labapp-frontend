@@ -21,8 +21,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { useLogin } from "~/services/onboarding/queries";
 import { toast } from "sonner";
-import { RiseLoader } from "react-spinners";
-import { useQueryClient } from "@tanstack/react-query";
+import Spinner from "~/components/ui/Spinner";
 
 const formSchema = z.object({
   email: z.email("Please enter a valid email"),
@@ -83,7 +82,7 @@ const Login = () => {
 
         <Button
           variant="outline"
-          className="w-full h-11 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-200 gap-3 font-medium"
+          className="h-11 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all duration-200 gap-3 font-medium mx-auto flex items-center justify-center px-4"
         >
           <GoogleLogo />
           Continue with Google
@@ -142,8 +141,8 @@ const Login = () => {
               )}
             />
 
-            <Button type="submit" disabled={isPending}>
-              {isPending ? <RiseLoader color="white" /> : "Sign in to account"}
+            <Button type="submit" disabled={isPending} className="ml-auto">
+              {isPending ? <Spinner /> : "Sign in to account"}
             </Button>
           </form>
         </Form>

@@ -145,73 +145,57 @@ body {
   }
 }
 
-.activeText {
-  @apply relative rounded-l-full bg-white transition-all duration-200 ease-in-out overflow-visible;
+.nav-button {
+  @apply relative overflow-visible;
 }
 
-.activeText::before {
-  padding: 10px;
+.nav-button::before,
+.nav-button::after {
   content: "";
   position: absolute;
-  background-color: transparent;
-  right: 0px;
+  right: 0;
+  width: 20%;
+  height: 86%;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.nav-button::before {
   top: 100%;
-  height: 100%;
-  width: 20%;
   border-top-right-radius: 50%;
-  box-shadow: 0 -25px 0 0 white;
-  transition: all 200 ease-in-out;
-  z-index: 10;
+  box-shadow: 0 -25px 0 0 #f4f4f5;
 }
 
-.activeText::after {
-  padding: 10px;
-  content: "";
-  position: absolute;
-  background-color: transparent;
-  right: 0px;
+.nav-button::after {
   bottom: 100%;
-  height: 100%;
-  width: 20%;
   border-bottom-right-radius: 50%;
-  box-shadow: 0 25px 0 0 white;
-  transition: all 200 ease-in-out;
-  z-index: 10;
+  box-shadow: 0 25px 0 0 #f4f4f5;
 }
 
-.logout-button:hover,
-.logout-button:focus-visible {
-  @apply relative rounded-l-full bg-white transition-all duration-200 ease-in-out overflow-visible;
+.nav-button:hover,
+.nav-button:focus-visible,
+.nav-button.active-nav {
+  @apply rounded-l-full bg-white;
 }
 
-.logout-button:hover::before,
-.logout-button:focus-visible::before {
-  padding: 10px;
-  content: "";
-  position: absolute;
-  background-color: transparent;
-  right: 0px;
-  top: 100%;
-  height: 100%;
-  width: 20%;
-  border-top-right-radius: 50%;
-  box-shadow: 0 -25px 0 0 white;
-  transition: all 200 ease-in-out;
-  z-index: 10;
+.nav-button:hover::before,
+.nav-button:hover::after,
+.nav-button:focus-visible::before,
+.nav-button:focus-visible::after,
+.nav-button.active-nav::before,
+.nav-button.active-nav::after {
+  opacity: 1;
 }
 
-.logout-button:hover::after,
-.logout-button:focus-visible::after {
-  padding: 10px;
-  content: "";
-  position: absolute;
-  background-color: transparent;
-  right: 0px;
-  bottom: 100%;
-  height: 100%;
-  width: 20%;
-  border-bottom-right-radius: 50%;
-  box-shadow: 0 25px 0 0 white;
-  transition: all 200 ease-in-out;
-  z-index: 10;
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: inherit;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px transparent;
+  -webkit-text-fill-color: #18181b !important;
 }

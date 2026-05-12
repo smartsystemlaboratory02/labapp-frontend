@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 
-import { CheckCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -96,7 +95,7 @@ const UpdateUserRoleForm = ({
   const form = useForm<z.infer<typeof memberSchema>>({
     resolver: zodResolver(memberSchema),
     defaultValues: {
-      role: role,
+      role: undefined,
     },
   });
 

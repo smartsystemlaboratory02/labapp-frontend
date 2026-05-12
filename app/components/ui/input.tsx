@@ -3,8 +3,6 @@ import * as React from "react";
 import { cn } from "~/lib/utils";
 import { Eye, EyeSlash } from "iconsax-reactjs";
 
-// TODO: autofill looks terrible
-
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   const [show, setShow] = React.useState<boolean>(false);
 

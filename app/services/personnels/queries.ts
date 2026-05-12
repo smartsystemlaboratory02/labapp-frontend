@@ -50,6 +50,7 @@ export const useChangePersonnelRoleMutation = (userId: string) => {
       changePersonnelRoleRequest(userId, role),
     mutationKey: ["changePersonnelRoleRequest"],
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["personnelsInfo"] });
       queryClient.invalidateQueries({
         queryKey: ["personnelInfoById", userId],
       });

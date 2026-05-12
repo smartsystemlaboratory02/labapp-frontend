@@ -100,15 +100,21 @@ export default function PersonnelProfileDetails() {
                   <ActivateUserModal userId={userId} />
                 )}
 
-                <button
-                  className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-red-50 text-red-500 transition-colors group"
-                  disabled
-                >
-                  <div className="size-8 rounded-lg bg-red-100 flex items-center justify-center">
-                    <UserRemove size="18" variant="Bold" />
-                  </div>
-                  <p className="text-xs font-bold">Remove Intern</p>
-                </button>
+                {personnel.role !== "admin" && (
+                  <button
+                    className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-red-50 text-red-500 transition-colors group"
+                    disabled
+                  >
+                    <div className="size-8 rounded-lg bg-red-100 flex items-center justify-center">
+                      <UserRemove size="18" variant="Bold" />
+                    </div>
+                    <p className="text-xs font-bold">
+                      Remove{" "}
+                      {personnel.role.charAt(0).toUpperCase() +
+                        personnel.role.slice(1)}
+                    </p>
+                  </button>
+                )}
               </div>
             </HoverCardContent>
           </HoverCard>

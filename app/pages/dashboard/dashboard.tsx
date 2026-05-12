@@ -36,7 +36,7 @@ const Dashboard = () => {
         <div className="space-y-6 lg:space-y-8 dt:col-span-2">
           <WelcomeHero name={dashboardData.name} />
 
-          <div className="md:grid md:grid-cols-2 gap-6 lg:gap-8 space-y-6 lg:space-y-8 dt:space-y-0">
+          <div className="md:grid md:grid-cols-2 gap-6 lg:gap-8 space-y-6 lg:space-y-8 dt:space-y-0 items-stretch">
             <Projects projects={dashboardData.active_projects} />
             <Reports />
           </div>
